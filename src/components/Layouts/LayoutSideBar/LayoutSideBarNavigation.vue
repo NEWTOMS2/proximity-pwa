@@ -37,7 +37,7 @@
       },
       onSubmit () {
         this.$store.dispatch('logInOut').then(() => {
-          this.$router.push({ path: '/' })
+          this.$router.push({path: '/', replace: true})
         })
       }
     }
