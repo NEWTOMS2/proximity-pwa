@@ -6,6 +6,7 @@ import Home from '@/Views/ViewsUser/Home'
 import Beacon from '@/Views/ViewsUser/Beacon'
 import BeaconTypes from '@/Views/ViewsUser/BeaconTypes'
 import BeaconHierarchy from '@/Views/ViewsUser/BeaconHierarchy'
+import Places from '@/Views/ViewsUser/Places'
 import ContentCards from '@/Views/ViewsUser/ContentCards'
 
 Vue.use(Router)
@@ -22,6 +23,7 @@ export default new Router({
         { path: '/Beacon', component: Beacon },
         { path: '/BeaconTypes', component: BeaconTypes },
         { path: '/BeaconHierarchy', component: BeaconHierarchy },
+        { path: '/Places', component: Places },
         { path: '/ContentCards', component: ContentCards }
       ]
     }

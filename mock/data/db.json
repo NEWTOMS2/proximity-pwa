@@ -50,5 +50,15 @@
       "id": 4,
       "description": "Offers 50%"
     }
+  ],
+  "places": [
+    {
+      "id": 1,
+      "description": "Front Store"
+    },
+    {
+      "description": "Outside",
+      "id": 2
+    }
   ]
 }

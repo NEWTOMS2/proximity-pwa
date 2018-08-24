@@ -3,7 +3,7 @@ import Axios from 'axios'
 // create an axios instance
 const services = Axios.create({
   mode: 'no-cors',
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://json-server-heroku-qlldvzrmtq.now.sh',
   headers: {
     'crossDomain': true
   }

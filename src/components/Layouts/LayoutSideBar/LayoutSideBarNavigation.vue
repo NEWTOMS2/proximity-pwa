@@ -19,7 +19,7 @@
              <router-link class="app-navigation-item" to="/BeaconHierarchy" replace><el-menu-item index="2-2">Hierarchy</el-menu-item></router-link>
         </el-menu-item-group>
         <el-menu-item-group title="Global">
-          <el-menu-item index="2-3">Places</el-menu-item>
+          <router-link class="app-navigation-item" to="/Places" replace><el-menu-item index="2-3">Places</el-menu-item></router-link>
         </el-menu-item-group>
       </el-submenu>
       <el-menu-item @click="onSubmit()" index="1">LogOut</el-menu-item>
