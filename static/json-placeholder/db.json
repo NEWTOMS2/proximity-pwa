@@ -1,0 +1,54 @@
+{
+  "beacons_types": [
+    {
+      "id": 1,
+      "description": "Advertisement Pusher"
+    },
+    {
+      "id": 2,
+      "description": "Point Catcher"
+    },
+    {
+      "id": 3,
+      "description": "Move Behavior"
+    },
+    {
+      "id": 4,
+      "description": "Traffic Seeker"
+    },
+    {
+      "description": "Empathy Manager",
+      "id": 5
+    },
+    {
+      "description": "Solo Wacther",
+      "id": 6
+    },
+    {
+      "description": "Bacon Brother",
+      "id": 7
+    },
+    {
+      "description": "Constumer Inviter",
+      "id": 8
+    }
+  ],
+  "beacons_hierarchy": [
+    {
+      "id": 1,
+      "description": "Front Store"
+    },
+    {
+      "id": 2,
+      "description": "Rack 1"
+    },
+    {
+      "id": 3,
+      "description": "Section 5"
+    },
+    {
+      "id": 4,
+      "description": "Offers 50%"
+    }
+  ]
+}
