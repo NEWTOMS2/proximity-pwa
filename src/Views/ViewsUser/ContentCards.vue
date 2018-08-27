@@ -97,14 +97,14 @@ export default {
 }
 
 .content-sizes {
-    padding: 3rem;
+    padding: 3rem!important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
-    margin-top: 1rem;
+    margin-top: 1rem!important;
 }
 
 .top-check {
-    position: absolute;
+    position: absolute!important;
     top: -50px;
     right: 0;
 }
