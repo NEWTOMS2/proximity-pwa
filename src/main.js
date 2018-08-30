@@ -5,12 +5,17 @@ import App from './App'
 import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
+import Vuetify from 'vuetify'
+
 import wysiwyg from 'vue-wysiwyg'
+
+import 'vuetify/dist/vuetify.min.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css'
 import 'vue-wysiwyg/dist/vueWysiwyg.css'
 
 Vue.use(ElementUI)
+Vue.use(Vuetify)
 Vue.use(wysiwyg, {})
 
 Vue.config.productionTip = false

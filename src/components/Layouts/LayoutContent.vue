@@ -2,7 +2,6 @@
   <keep-alive>
     <transition name="slide-transform" mode="out-in">
       <router-view/>
-      <!-- <component :is="isLogged"></component> -->
     </transition>
   </keep-alive>
 </template>

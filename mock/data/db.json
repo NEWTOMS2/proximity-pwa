@@ -1,64 +1,273 @@
 {
-  "beacons_types": [
+  "beacons": [
     {
+      "id": "45",
+      "name": "Blue-Bird",
+      "type": "Advertisement Pusher",
+      "radius": "45m"
+    },
+    {
+      "id": "12",
+      "name": "Jade",
+      "type": "Advertisement Pusher",
+      "radius": "45m"
+    },
+    {
+      "id": "54",
+      "name": "Invisible-Gentelmen",
+      "type": "Advertisement Pusher",
+      "radius": "45m"
+    },
+    {
+      "id": "34",
+      "name": "White-Peakcok",
+      "type": "Advertisement Pusher",
+      "radius": "45m"
+    },
+    {
+      "id": "87",
+      "name": "Mole Joker",
+      "type": "Bacon Brother",
+      "radius": "45m"
+    },
+    {
+      "id": "18",
+      "name": "Sea-Monkey",
+      "type": "Advertisement Pusher",
+      "radius": "45m"
+    },
+    {
+      "id": "33",
+      "name": "Sweet-Whisper",
+      "type": "Advertisement Pusher",
+      "radius": "45m"
+    },
+    {
+      "id": "89",
+      "name": "Mr.B-1",
+      "type": "Advertisement Pusher",
+      "radius": "45m"
+    },
+    {
+      "id": "22",
+      "name": "Mr.B-2",
+      "type": "Move Behavior",
+      "radius": "45m"
+    },
+    {
+      "id": "78",
+      "name": "Mr.B-1A",
+      "type": "Traffic Seeker",
+      "radius": "45m"
+    }
+  ],
+  "beacons_types": [{
       "id": 1,
-      "description": "Advertisement Pusher"
+      "name": "Advertisement Pusher"
     },
     {
       "id": 2,
-      "description": "Point Catcher"
+      "name": "Point Catcher"
     },
     {
       "id": 3,
-      "description": "Move Behavior"
+      "name": "Move Behavior"
     },
     {
       "id": 4,
-      "description": "Traffic Seeker"
+      "name": "Traffic Seeker"
     },
     {
-      "description": "Empathy Manager",
+      "name": "Empathy Manager",
       "id": 5
     },
     {
-      "description": "Solo Wacther",
+      "name": "Solo Wacther",
       "id": 6
     },
     {
-      "description": "Bacon Brother",
+      "name": "Bacon Brother",
       "id": 7
     },
     {
-      "description": "Constumer Inviter",
+      "name": "Constumer Inviter",
       "id": 8
     }
   ],
-  "beacons_hierarchy": [
-    {
+  "beacons_hierarchy": [{
       "id": 1,
-      "description": "Front Store"
+      "name": "Front Store"
     },
     {
       "id": 2,
-      "description": "Rack 1"
+      "name": "Rack 1"
     },
     {
       "id": 3,
-      "description": "Section 5"
+      "name": "Section 5"
     },
     {
       "id": 4,
-      "description": "Offers 50%"
+      "name": "Offers 50%"
     }
   ],
-  "places": [
-    {
+  "places": [{
       "id": 1,
-      "description": "Front Store"
+      "name": "Front Store"
     },
     {
-      "description": "Outside",
+      "name": "Outside",
       "id": 2
     }
-  ]
+  ],
+  "beacon_place_hierarchy": {
+    "places": [
+      {
+        "id": "1",
+        "name": "Front Store",
+        "hierarchy": [
+          {
+            "id": "1",
+            "name": "Left Corner",
+            "beacons": [
+              {
+                "id": "56",
+                "name": "Yellow-Bird",
+                "type": "Advertisement Pusher",
+                "radius": "12m"
+              },
+              {
+                "id": "77",
+                "name": "Mole-Vendor",
+                "type": "Move Behavior",
+                "radius": "2m"
+              }
+            ]
+          },
+          {
+            "id": "2",
+            "name": "Right Corner",
+            "beacons": [
+              {
+                "id": "23",
+                "name": "Data-Rock",
+                "type": "Point Catcher",
+                "radius": "45m"
+              },
+              {
+                "id": "14",
+                "name": "Mule-Road",
+                "type": "Solo Wacther",
+                "radius": "100m"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "name": "Electronics",
+        "hierarchy": [
+          {
+            "id": "1",
+            "name": "Left Corner",
+            "beacons": [
+              {
+                "id": "52",
+                "name": "Yellow-Bird-II",
+                "type": "Advertisement Pusher",
+                "radius": "12m"
+              },
+              {
+                "id": "77",
+                "name": "Mole-Vendor-A",
+                "type": "Move Behavior",
+                "radius": "2m"
+              }
+            ]
+          },
+          {
+            "id": "2",
+            "name": "Right Corner",
+            "beacons": [
+              {
+                "id": "23",
+                "name": "Data-Rock-Ruby",
+                "type": "Point Catcher",
+                "radius": "22m"
+              },
+              {
+                "id": "14",
+                "name": "Mule-Road",
+                "type": "Solo Wacther",
+                "radius": "100m"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "unassigned_beacons": [
+      {
+        "id": "45",
+        "name": "Blue-Bird",
+        "type": "Advertisement Pusher",
+        "radius": "45m"
+      },
+      {
+        "id": "12",
+        "name": "Jade",
+        "type": "Advertisement Pusher",
+        "radius": "45m"
+      },
+      {
+        "id": "54",
+        "name": "Invisible-Gentelmen",
+        "type": "Advertisement Pusher",
+        "radius": "45m"
+      },
+      {
+        "id": "34",
+        "name": "White-Peakcok",
+        "type": "Advertisement Pusher",
+        "radius": "45m"
+      },
+      {
+        "id": "12",
+        "name": "Mole Joker",
+        "type": "Bacon Brother",
+        "radius": "45m"
+      },
+      {
+        "id": "18",
+        "name": "Sea-Monkey",
+        "type": "Advertisement Pusher",
+        "radius": "45m"
+      },
+      {
+        "id": "33",
+        "name": "Sweet-Whisper",
+        "type": "Advertisement Pusher",
+        "radius": "45m"
+      },
+      {
+        "id": "89",
+        "name": "Mr.B-1",
+        "type": "Advertisement Pusher",
+        "radius": "45m"
+      },
+      {
+        "id": "22",
+        "name": "Mr.B-2",
+        "type": "Move Behavior",
+        "radius": "45m"
+      },
+      {
+        "id": "78",
+        "name": "Mr.B-1A",
+        "type": "Traffic Seeker",
+        "radius": "45m"
+      }
+    ]
+  }
 }

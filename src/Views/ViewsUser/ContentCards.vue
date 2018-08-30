@@ -1,56 +1,56 @@
 <template>
-<div class="content-card flex is-flex">
-    <el-row class="flex is-flex">
-        <el-col :span="12" class="flex is-flex">
-            <div class="section-card-content is-flex">
-                <h2>Content Card Form</h2>
-                <el-form ref="form" :model="card" label-position="top">
-                    <el-form-item label="Card Name">
-                        <el-input placeholder="Name" v-model="card.title"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Card Content Image">
-                        <el-checkbox class="top-check" v-model="showCardImage">Show</el-checkbox>
-                        <el-input placeholder="Image Url" v-model="card.imgUrl"></el-input>
-                        <div class="image-sizes-control">
-                            <el-button type="text" class="button content-sizes" @click="changeImageSize(400)" :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl})`">400px</el-button>
-                            <el-button type="text" class="button content-sizes" @click="changeImageSize(600)" :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl})`">600px</el-button>
-                        </div>
-                    </el-form-item>
-                    <el-form-item label="Card Content">
-                        <el-checkbox class="top-check" v-model="showCardContent">Show</el-checkbox>
-                        <wysiwyg v-model="card.content" />
-                    </el-form-item>
-                    <el-form-item label="Card Actions">
-                        <el-checkbox class="top-check" v-model="showCardActions">Show</el-checkbox>
-                    </el-form-item>
-                </el-form>
-            </div>
-        </el-col>
-        <el-col :span="12" class="flex is-flex">
-            <div class="section-card-content is-flex">
-                <h2>Content Card Preview</h2>
-                <h4 class="card-title" v-bind:class="[card.title === '' ? 'emptyClass emptyCardName' : '']">{{ card.title }}</h4>
-                <transition name="bounce">
-                <el-card class="card-previewed smooth-away" :body-style="{ padding: '0px' }">
-                    <transition name="bounce">
-                        <img v-if="showCardImage" :src="card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl" class="image smooth-away" :style="`height: ${card.imageSizes}`">
-                    </transition>
-                    <div style="padding: 14px;">
-                        <transition name="bounce">
-                            <div v-if="showCardContent" v-bind:class="[card.content === '' ? 'emptyClass emptyCardContent' : '']" v-html="card.content"></div>
-                        </transition>
-                        <transition name="bounce">
-                            <div class="bottom clearfix" v-if="showCardActions">
-                                <el-button type="text" class="button">Operating button</el-button>
+    <div class="content-card flex is-flex">
+        <el-row class="flex is-flex">
+            <el-col :span="12" class="flex is-flex">
+                <div class="section-card-content is-flex">
+                    <h2>Content Card Form</h2>
+                    <el-form ref="form" :model="card" label-position="top">
+                        <el-form-item label="Card Name">
+                            <el-input placeholder="Name" v-model="card.title"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Card Content Image">
+                            <el-checkbox class="top-check" v-model="showCardImage">Show</el-checkbox>
+                            <el-input placeholder="Image Url" v-model="card.imgUrl"></el-input>
+                            <div class="image-sizes-control">
+                                <el-button type="text" class="button content-sizes" @click="changeImageSize(400)" :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl})`">400px</el-button>
+                                <el-button type="text" class="button content-sizes" @click="changeImageSize(600)" :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl})`">600px</el-button>
                             </div>
+                        </el-form-item>
+                        <el-form-item label="Card Content">
+                            <el-checkbox class="top-check" v-model="showCardContent">Show</el-checkbox>
+                            <wysiwyg v-model="card.content" />
+                        </el-form-item>
+                        <el-form-item label="Card Actions">
+                            <el-checkbox class="top-check" v-model="showCardActions">Show</el-checkbox>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-col>
+            <el-col :span="12" class="flex is-flex">
+                <div class="section-card-content is-flex">
+                    <h2>Content Card Preview</h2>
+                    <h4 class="card-title" v-bind:class="[card.title === '' ? 'emptyClass emptyCardName' : '']">{{ card.title }}</h4>
+                    <transition name="bounce">
+                    <el-card class="card-previewed smooth-away" :body-style="{ padding: '0px' }">
+                        <transition name="bounce">
+                            <img v-if="showCardImage" :src="card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl" class="image smooth-away" :style="`height: ${card.imageSizes}`">
                         </transition>
-                    </div>
-                </el-card>
-                </transition>
-            </div>
-        </el-col>
-    </el-row>
-</div>
+                        <div style="padding: 14px;">
+                            <transition name="bounce">
+                                <div v-if="showCardContent" v-bind:class="[card.content === '' ? 'emptyClass emptyCardContent' : '']" v-html="card.content"></div>
+                            </transition>
+                            <transition name="bounce">
+                                <div class="bottom clearfix" v-if="showCardActions">
+                                    <el-button type="text" class="button">Operating button</el-button>
+                                </div>
+                            </transition>
+                        </div>
+                    </el-card>
+                    </transition>
+                </div>
+            </el-col>
+        </el-row>
+    </div>
 </template>
 
 <script>

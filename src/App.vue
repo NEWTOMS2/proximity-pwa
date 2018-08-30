@@ -1,7 +1,9 @@
 <template>
-<el-container id="app-container">
-  <router-view/>
-</el-container>  
+<v-app id="keep">
+  <transition name="fade">
+    <router-view/>
+  </transition>
+</v-app>  
 </template>
 <script>
   export default {
@@ -34,6 +36,9 @@
   .is-flex {
     flex: 1;
   }
+  .flex-column {
+    flex-flow: column;
+  }
   .app-container {
     padding: 2rem;
   }
@@ -41,17 +46,17 @@
     margin: 0 45rem;
   }
   /*fade-transform*/
-.fade-transform-leave-active,
-.fade-transform-enter-active {
-  transition: all .45s;
+.fade-enter-active, .fade-leave-active {
+  transition-property: opacity;
+  transition-duration: .25s;
 }
-.fade-transform-enter {
-  opacity: 0;
-  transform: translateX(-30px);
+
+.fade-enter-active {
+  transition-delay: .25s;
 }
-.fade-transform-leave-to {
-  opacity: 0;
-  transform: translateX(-30px);
+
+.fade-enter, .fade-leave-active {
+  opacity: 0
 }
 
   /*slide-transform*/

@@ -11,6 +11,7 @@
       <router-link class="app-navigation-item" to="/Home" replace><el-menu-item index="1">Home</el-menu-item></router-link>
       <router-link class="app-navigation-item" to="/Beacon" replace><el-menu-item index="2">Beacon</el-menu-item></router-link>
       <router-link class="app-navigation-item" to="/ContentCards" replace><el-menu-item index="3">Content Cards</el-menu-item></router-link>
+      <router-link class="app-navigation-item" to="/BeaconPlaceHierarchy" replace><el-menu-item index="4">Beacon Place Hierarchy</el-menu-item></router-link>
       <el-submenu index="2">
         <template slot="title"><i class="el-icon-setting"></i>Configurations</template>
         <el-menu-item-group>
