@@ -1,36 +1,48 @@
 <template>
-    <div class="app-container">
-        <h1>Beacon - Hierarchy</h1>
-         <div class="filter-container">
-            <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item"  v-model="search">
-            </el-input>
-            <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate()" type="primary" icon="el-icon-edit"></el-button>
-        </div>
-        <div class="data-container">
-            <el-table :key='tableKey' :data="placesList" v-loading="listLoading" element-loading-text="Cargando" border fit highlight-current-row style="width: 100%">
-                <el-table-column width="60px" prop="id" label="Id" sortable/>
-                <el-table-column prop="description" label="Decription" sortable/>
-                <el-table-column width="100px" align="center" label="Acciones" class-name="small-padding">
-                    <template slot-scope="scope">
-                        <el-button size="mini" @click="handleUpdate(scope.row)">Edit</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-                    <el-dialog v-loading="itemLoading" :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-            <el-form ref="dataForm" :model="place" label-position="top">
-               <el-form-item label="Description" prop="description">
-                   <el-input v-model="place.description"></el-input>
-               </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">Cancel</el-button>
-                <el-button v-if="dialogStatus === 'create'" type="primary" @click="creatData()">Register</el-button>
-                <el-button v-else type="primary" @click="updateData()">Update</el-button>
-            </div>
-        </el-dialog>
-        </div>
+    <div transition="slide-x-transition">
+        <v-toolbar flat color="white">
+            <v-toolbar-title class="elegant__title"><img style="width: 25%;" src="@/assets/beacon.png" alt="" srcset=""><h3>Places</h3></v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+            <v-dialog v-model="dialog" max-width="500px">
+                <v-card>
+                    <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                                <v-flex xs12 sm6 md4>
+                                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
+                        <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-toolbar>
+        <v-data-table :headers="headers" :items="beaconsTypes" hide-actions :search="search">
+            <template slot="items" slot-scope="props">
+                <td>{{ props.item.id }}</td>
+                <td>{{ props.item.name }}</td>
+                <td class="justify-center layout px-0">
+                    <v-icon small class="mr-2" @click="editItem(props.item)">
+                        edit
+                    </v-icon>
+                </td>
+            </template>
+            <template slot="no-data">
+                <v-btn color="primary" @click="getData">Reset</v-btn>
+            </template>
+        </v-data-table>
     </div>
 </template>
+
 
 <script>
 import {
@@ -42,91 +54,84 @@ import {
 export default {
   data: () => ({
     search: '',
-    dialogStatus: '',
-    tableKey: 0,
-    listLoading: false,
-    itemLoading: false,
-    dialogFormVisible: false,
-    placesList: [],
-    textMap: {
-      update: 'Update Beacon Hierarchy',
-      create: 'Create Beacon Hierarchy'
+    dialog: false,
+    headers: [
+      { text: 'Id', value: 'id', width: '50px' },
+      { text: 'Name', value: 'name' },
+      { text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px' }
+    ],
+    beaconsTypes: [],
+    editedIndex: -1,
+    editedItem: {
+      id: 0,
+      name: '',
+      type: '',
+      radius: 0
     },
-    place: {
-      description: ''
+    defaultItem: {
+      name: '',
+      type: '',
+      radius: 0
     }
   }),
-  watch: {
-    search: function (val) {
-      this.search = val
-      this.listLoading = true
-      fetchPlacesPlaceholder()
-        .then(response => {
-          this.placesList = response.data.filter(function (o) {
-            return Object.keys(o).some(function (k) {
-              return o[k].toString().indexOf(val) !== -1
-            })
-          })
-        })
-        .then(() => {
-          this.listLoading = false
-        })
+
+  computed: {
+    formTitle () {
+      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
     }
   },
-  created () {
-    this.fetchData()
+
+  watch: {
+    dialog (val) {
+      val || this.close()
+    }
   },
+
+  created () {
+    this.getData()
+  },
+
   methods: {
-    fetchData () {
-      this.listLoading = true
+    getData () {
       fetchPlacesPlaceholder().then(response => {
-        this.placesList = response.data
-        this.listLoading = false
+        this.beaconsTypes = response.data
       })
     },
-    fetchItem (id) {
-      this.itemLoading = true
-      fetchPlacePlaceholder(id).then(response => {
-        this.itemLoading = false
-        this.place = response.data
+
+    editItem (item) {
+      fetchPlacePlaceholder(item).then(response => {
+        this.editedItem = Object.assign({}, response.data)
       })
+      this.editedIndex = this.beaconsTypes.indexOf(item)
+      this.dialog = true
     },
-    resetForm () {
-      this.place = {
-        description: ''
+
+    /* deleteItem (item) {
+      const index = this.desserts.indexOf(item)
+      confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+    }, */
+
+    close () {
+      this.dialog = false
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      }, 300)
+    },
+
+    save () {
+      if (this.editedIndex > -1) {
+        Object.assign(this.beaconsTypes[this.editedIndex], this.editedItem)
+        updatePlacePlaceholder(this.editedItem).then(response => {
+          console.log(this.editedItem)
+        })
+      } else {
+        creatPlacePlaceholder(this.editedItem).then(response => {
+          console.log(response)
+          this.beaconsTypes.push(this.editedItem)
+        })
       }
-    },
-    handleCreate () {
-      this.resetForm()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-    },
-    handleUpdate (data) {
-      this.fetchItem(data.id)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-    },
-    updateData () {
-      const tempData = Object.assign({}, this.place)
-      updatePlacePlaceholder(tempData).then(response => {
-        console.log(response)
-        for (const v of this.placesList) {
-          if (v.id === this.place.id) {
-            const index = this.placesList.indexOf(v)
-            this.placesList.splice(index, 1, this.place)
-            break
-          }
-        }
-        this.dialogFormVisible = false
-      })
-    },
-    creatData () {
-      creatPlacePlaceholder(this.place).then(response => {
-        console.log(response)
-      }).then(() => {
-        this.fetchData()
-        this.dialogFormVisible = false
-      })
+      this.close()
     }
   }
 }
@@ -135,3 +140,4 @@ export default {
 <style>
 
 </style>
+

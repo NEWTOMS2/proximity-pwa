@@ -1,34 +1,86 @@
 <template>
-    <div class="container-test">
+    <div class="container-places-canvas flex is-flex oppa-column-style">
         <h2>Beacons - Place's Hierarchy</h2>
         <div class="app-drag-and-drop-container flex side-padding">
             <div class="places">
                 <h2>Places</h2>
                 <div class="place-container" v-for="place in beaconPlaceHierarchy" :key="place.id">
-                    <h3> {{place.name}} </h3>
-                    <div class="hierarchy-container move-behaivor flex">
-                        <div class="hierarchy-level is-flex" v-for="level in place.hierarchy" :key="level.id">
-                            <h4> {{level.name}} </h4>
-                            <draggable element="el-collapse" :list="level.beacons" :component-data="getComponentData()" class="drag-container" :options="{group:'beacons',animation: 250}">
-                                <el-collapse-item v-for="e in level.beacons" :key="e.name" :title="e.name" :name="e.name">
-                                    <p><span class="bold">Type: </span>{{e.type}}</p>
-                                    <p><span class="bold">Radius: </span>{{e.radius}}</p>
-                                </el-collapse-item>
-                            </draggable>
+                    <v-card>
+                        <v-card-title primary-title>
+                            <h3> {{place.name}} </h3>
+                        </v-card-title>
+                        <div class="hierarchy-container move-behaivor flex">
+                            <div class="hierarchy-level is-flex" v-for="level in place.hierarchy" :key="level.id">
+                                <v-card>
+                                    <v-card-title primary-title>
+                                        <h4> {{level.name}} </h4>
+                                    </v-card-title>
+                                    <draggable element="v-list" :list="level.beacons" class="drag-container" :options="{group:'beacons',animation: 350}">
+                                        <v-list-group v-for="item in level.beacons" :key="item.name" no-action>
+                                            <v-list-tile slot="activator">
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-list-tile>
+
+                                            <v-list-tile>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title>{{ item.type }}</v-list-tile-title>
+                                                </v-list-tile-content>
+
+                                                <v-list-tile-action>
+                                                    <v-icon>{{ key }}</v-icon>
+                                                </v-list-tile-action>
+                                            </v-list-tile>
+                                            <v-list-tile>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title>{{ item.radius }}</v-list-tile-title>
+                                                </v-list-tile-content>
+
+                                                <v-list-tile-action>
+                                                    <v-icon>{{ key }}</v-icon>
+                                                </v-list-tile-action>
+                                            </v-list-tile>
+                                        </v-list-group>
+                                    </draggable>
+                                </v-card>
+                            </div>
                         </div>
-                    </div>
+                    </v-card>
                 </div>
             </div>
             <div class="unassigned-beacons">
-                <h2>Unassigned Beacons</h2>
-                <el-collapse accordion>
-                    <draggable element="el-collapse" :list="unassignedBeacons" :component-data="getComponentData()" class="drag-container" :options="{group:'beacons',animation: 250}">
-                        <el-collapse-item v-for="e in unassignedBeacons" :key="e.name" :title="e.name" :name="e.name">
-                            <p><span class="bold">Type: </span>{{e.type}}</p>
-                            <p><span class="bold">Radius: </span>{{e.radius}}</p>
-                        </el-collapse-item>
+              <v-card>
+                 <v-card-title primary-title>
+                  <h2>Unassigned Beacons</h2>
+                 </v-card-title>
+                    <draggable element="v-list" :list="unassignedBeacons" class="drag-container" :options="{group:'beacons',animation: 350}">
+                        <v-list-group v-for="item in unassignedBeacons" :key="item.name" no-action>
+                            <v-list-tile slot="activator">
+                                <v-list-tile-content>
+                                    <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+
+                            <v-list-tile>
+                                <v-list-tile-content>
+                                    <v-list-tile-title><span class="bold">Type: </span>{{item.type }}</v-list-tile-title>
+                                </v-list-tile-content>
+                                <v-list-tile-action>
+                                    <v-icon>{{ key }}</v-icon>
+                                </v-list-tile-action>
+                            </v-list-tile>
+                            <v-list-tile>
+                                <v-list-tile-content>
+                                    <v-list-tile-title><span class="bold">Radius: </span>{{ item.radius }}</v-list-tile-title>
+                                </v-list-tile-content>
+                                <v-list-tile-action>
+                                    <v-icon>{{ key }}</v-icon>
+                                </v-list-tile-action>
+                            </v-list-tile>
+                        </v-list-group>
                     </draggable>
-                </el-collapse>
+              </v-card>
             </div>
         </div>
     </div>
@@ -62,26 +114,13 @@ export default {
         console.log(this.beaconPlaceHierarchy)
         console.log(this.unassignedBeacons)
       })
-    },
-    getComponentData () {
-      var values = {
-        on: {
-          change: this.handleChange,
-          input: this.inputChanged
-        },
-        props: {
-          value: this.activeNames,
-          accordion: true
-        }
-      }
-      return values
     }
   }
 }
 </script>
 <style scoped>
   .side-padding {
-    padding: 0 3rem;
+    padding: 0 1rem;
   }
   .bold {
     font-weight: 900;

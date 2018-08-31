@@ -16,12 +16,15 @@
       return {
         tableData: Array(20).fill(item)
       }
+    },
+    created () {
+      console.log(process.env.ROOT_API)
     }
   }
 </script>
 <style>
   html,body {
-    overflow: hidden;
+    overflow: auto;
   }
  body {
    margin: 0!important;
@@ -44,6 +47,9 @@
   }
   .el-dialog {
     margin: 0 45rem;
+  }
+  .oppa-column-style {
+    flex-flow: column;
   }
   /*fade-transform*/
 .fade-enter-active, .fade-leave-active {

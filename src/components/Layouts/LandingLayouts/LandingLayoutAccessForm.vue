@@ -1,6 +1,7 @@
 <template>
     <v-container fluid fill-height>
-        <v-layout align-center justify-center>
+        <v-layout align-center justify-center class="oppa-column-style">
+          <img src="@/assets/becon_logo.png" alt="" srcset="" style="width: 30%; padding-bottom: 2rem;">
              <v-form class="app-access-form">
               <h1>Proximity Marketing Agency</h1>
               <h2>Access</h2>
@@ -36,5 +37,8 @@ export default {
 .app-access-form {
     width: 75%;
     text-align: center;
+}
+.oppa-column-style{
+  flex-flow: column;
 }
 </style>

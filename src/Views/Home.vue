@@ -1,7 +1,7 @@
 <template>
     <div class="home">
     <home-layout-navigation-drawer/>
-    <v-content>
+    <v-content class="all-universe">
       <v-container fluid class="all-sky">
         <transition name="fade">
           <router-view/>
@@ -47,7 +47,10 @@ export default {
 
 <style>
 .all-sky {
-  height: 100vh;
   background: #fff;
+  height: 100%;
+}
+.all-universe {
+  min-height: 100vh;
 }
 </style>
