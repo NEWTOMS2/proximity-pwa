@@ -1,4 +1,5 @@
 import { userAccess } from '@/api/users'
+import router from '@/router'
 const state = {
   info: {
     id: '',
@@ -6,7 +7,9 @@ const state = {
     password: '',
     role: '',
     idOrganization: ''
-  }/*,
+  },
+  availableRoutes: []
+  /*,
   isLogged: {
     context: false,
     sideComponent: 'LayoutSideBarAccess',
@@ -19,26 +22,28 @@ const mutations = {
     state.info = Object.assign({}, data)
     console.log(state.info)
   },
+  PERMITTED_ROUTES (state, data) {
+    state.availableRoutes = data
+    console.log(state.availableRoutes)
+  },
   REMOVE_USER_DATA (state) {
     state.info = {}
-  }/*,
-  USER_LOGGED (state) {
-    if (state.isLogged.context) {
-      state.isLogged.context = !state.isLogged.context
-      state.isLogged.sideComponent = 'LayoutSideBarAccess'
-      state.isLogged.mainComponent = 'LayoutContentCarousel'
-    } else {
-      state.isLogged.context = !state.isLogged.context
-      state.isLogged.sideComponent = 'LayoutSideBarNavigation'
-      state.isLogged.mainComponent = 'LayoutContentMain'
-    }
-  } */
+  }
 }
 
 const actions = {
   userLogIn ({ commit }, data) {
     userAccess(data).then((result) => {
+      let routes = []
+      router.options.routes.forEach((element, index) => {
+        if (index > 0) {
+          if (element.meta.roles.includes(result.data.role)) {
+            routes.push(element)
+          }
+        }
+      })
       commit('SAVE_USER_DATA', result.data)
+      commit('PERMITTED_ROUTES', routes)
     })
   },
   logInOut ({ commit }) {

@@ -2,7 +2,7 @@
     <div class="drawer">
         <v-navigation-drawer :clipped="$vuetify.breakpoint.lgAndUp" v-model="drawer" fixed app>
             <v-list>
-                <template v-for="item in items">
+                <template v-for="item in routes">
                     <v-layout v-if="item.heading" :key="item.heading" row align-center>
                         <v-flex xs6>
                             <v-subheader v-if="item.heading">
@@ -13,35 +13,35 @@
                             <a href="#!" class="body-2 black--text">EDIT</a>
                         </v-flex>
                     </v-layout>
-                    <v-list-group v-else-if="item.children" v-model="item.model" :key="item.text" :append-icon="item.model ? item.icon : item['icon-alt']" :prepend-icon="item.baseIncon">
+                    <v-list-group popout v-else-if="item.children" v-model="item.meta.model" :key="item.meta.title" :append-icon="item.model ? item.meta.appendIcon : item.meta.appendIconAlt" :prepend-icon="item.meta.prependIcon">
                         <v-list-tile slot="activator">
                             <v-list-tile-content>
                                 <v-list-tile-title>
-                                    {{ item.text }}
+                                    {{ item.meta.title }}
                                 </v-list-tile-title>
                             </v-list-tile-content>
                         </v-list-tile>
                         <v-list-tile v-for="(child, i) in item.children" :key="i" @click="">
                         <router-link class="item-drawer-list" :to="child.path">
-                            <v-list-tile-action v-if="child.icon">
-                                <v-icon>{{ child.icon }}</v-icon>
+                            <v-list-tile-action v-if="child.meta.icon">
+                                <v-icon>{{ child.meta.icon }}</v-icon>
                             </v-list-tile-action>
                             <v-list-tile-content>
                                 <v-list-tile-title>
-                                    {{ child.text }}
+                                    {{ child.meta.title }}
                                 </v-list-tile-title>
                             </v-list-tile-content>
                         </router-link>
                         </v-list-tile>
                     </v-list-group>
-                    <v-list-tile v-else :key="item.text" @click="">
+                    <v-list-tile v-else :key="item.meta.title" @click="">
                         <router-link class="item-drawer-list" :to="item.path">
                         <v-list-tile-action>
-                            <v-icon>{{ item.icon }}</v-icon>
+                            <v-icon>{{ item.meta.icon }}</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
                             <v-list-tile-title>
-                                {{ item.text }}
+                                {{ item.meta.title}}
                             </v-list-tile-title>
                         </v-list-tile-content>
                         </router-link>
@@ -54,7 +54,9 @@
             <span class="title ml-3 mr-5">NEWTOMS&nbsp;<span class="font-weight-light">Proximity Marketing Agency (NPMA)</span></span>
             <!-- <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field> -->
             <v-spacer></v-spacer>
-            <span>{{organization}}</span>
+                <span class="mr-2"><b> User: </b>{{userInfo.usermane}}</span>
+                <span class="mr-2"><b> Organization: </b>{{userInfo.organizationName}}</span>
+                <span><b> Role: </b>{{userInfo.role}}</span>
             <v-btn flat @click="onSubmit">Log Out</v-btn>
         </v-toolbar>
     </div>
@@ -63,47 +65,20 @@
 export default {
   data: () => ({
     drawer: null,
-    items: [
-      { icon: 'lightbulb_outline', text: 'Home', path: '/app' },
-      {
-        baseIncon: 'adjust',
-        icon: 'keyboard_arrow_up',
-        'icon-alt': 'keyboard_arrow_down',
-        text: 'Beacons',
-        model: true,
-        children: [
-          { text: 'All Beacons', path: '/app/beacons/all', icon: 'scatter_plot' },
-          /* { text: 'Edit Beacons', path: '/app/beacons/all' }, */
-          { text: 'Types', path: '/app/beacons/types', icon: 'linear_scale' },
-          { text: 'Hierarchy', path: '/app/beacons/hierarchy', icon: 'border_vertical' },
-          { text: 'Place Hierarchy', path: '/app/beacons/placehierarchy', icon: 'group_work' }
-        ]
-      },
-      { icon: 'place', text: 'Places', path: '/app/places' },
-      { icon: 'art_track', text: 'Content Cards', path: '/app/contentcards' },
-      { text: 'Users', path: '/app/master/users', icon: 'people' },
-      { text: 'Roles', path: '/app/master/roles', icon: 'category' },
-      { text: 'Organizations', path: '/app/master/organizations', icon: 'store_mall_directory' }
-      /* { divider: true },
-      { heading: 'Labels' },
-      { icon: 'add', text: 'Create new label' },
-      { divider: true },
-      { icon: 'archive', text: 'Archive' },
-      { icon: 'delete', text: 'Trash' },
-      { divider: true },
-      { icon: 'settings', text: 'Settings' },
-      { icon: 'chat_bubble', text: 'Trash' },
-      { icon: 'help', text: 'Help' },
-      { icon: 'phonelink', text: 'App downloads' },
-      { icon: 'keyboard', text: 'Keyboard shortcuts' } */
-    ]
+    items: []
   }),
-  created () {
+  mounted () {
     this.configRoutes()
   },
+  created () {
+    // this.configRoutes()
+  },
   computed: {
-    organization () {
-      return this.$store.state.user.info.organization
+    userInfo () {
+      return this.$store.state.user.info
+    },
+    routes () {
+      return this.$store.state.user.availableRoutes
     }
   },
   methods: {
@@ -111,16 +86,6 @@ export default {
       this.$store.dispatch('logInOut').then(() => {
         this.$router.push({path: '/', replace: true})
       })
-    },
-    configRoutes () {
-      let items = []
-      this.$router.options.routes[1].children.forEach(element => {
-        if (element.meta.group !== '') {
-          items.push(element)
-        }
-      })
-      console.log(items)
-      // console.log(this.$router.options[1].children)
     }
   },
   props: {

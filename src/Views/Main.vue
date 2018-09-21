@@ -1,32 +1,59 @@
 <template>
-    <el-row class="app-layout">
-        <el-col 
-        :span="6" 
-        class="flex side-app">
-            <layout-side-bar/>
-        </el-col>
-        <el-col 
-        :span="18" 
-        >
-        <layout-content/>
-        </el-col>
-    </el-row>
+    <div class="home">
+    <home-layout-navigation-drawer/>
+    <v-content class="all-universe">
+      <v-container fluid class="all-sky">
+        <transition name="fade">
+          <router-view/>
+        </transition>
+      </v-container>
+    </v-content>
+    </div>
 </template>
 
 <script>
-import LayoutSideBar from '@/components/Layouts/LayoutSideBar'
-import LayoutContent from '@/components/Layouts/LayoutContent'
+import HomeLayoutNavigationDrawer from '@/components/Layouts/HomeLayouts/HomeLayoutNavigationDrawer'
 export default {
-  components: { LayoutSideBar, LayoutContent }
+  components: {HomeLayoutNavigationDrawer},
+  data: () => ({
+    drawer: null,
+    items: [
+      { icon: 'lightbulb_outline', text: 'Notes' },
+      { icon: 'touch_app', text: 'Reminders' },
+      { divider: true },
+      { heading: 'Labels' },
+      { icon: 'add', text: 'Create new label' },
+      { divider: true },
+      { icon: 'archive', text: 'Archive' },
+      { icon: 'delete', text: 'Trash' },
+      { divider: true },
+      { icon: 'settings', text: 'Settings' },
+      { icon: 'chat_bubble', text: 'Trash' },
+      { icon: 'help', text: 'Help' },
+      { icon: 'phonelink', text: 'App downloads' },
+      { icon: 'keyboard', text: 'Keyboard shortcuts' }
+    ]
+  }),
+  props: {
+    source: String
+  },
+  methods: {
+    showDrawer () {
+      this.$store.dispatch('showDrawer')
+    }
+  }
 }
 </script>
 
 <style>
-.app-layout {
-    min-width: 100vw;
-    display: flex;
+.all-sky.container {
+  padding: inherit!important;
 }
-.side-app {
-    min-width: 395px!important;
+.all-sky {
+  background: #fff;
+  height: 100%;
+}
+.all-universe {
+  min-height: 100vh;
 }
 </style>
