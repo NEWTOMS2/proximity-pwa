@@ -1,0 +1,255 @@
+<template>
+    <div class="container flex full-height">
+        <v-layout row wrap>
+            <v-flex xs7>
+                <v-form v-model="valid" class="full-width">
+                    <v-text-field 
+                    v-model="card.title" label="Card Name" required></v-text-field>
+                    <v-checkbox label="Enable/Disable Card Content Image" v-model="card.showCardImage" hide-details class="shrink mr-2"></v-checkbox>
+                    <v-text-field v-model="card.imgUrl" label="Card Content Image" required :append-icon="card.showCardImage ? 'check_box' : 'check_box_outline_blank'" @click:append="toggle('Image')"></v-text-field>
+                    <v-btn 
+                    @click="changeImageSize(400)" 
+                    class="content-sizes" 
+                    :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl}`">
+                    400px
+                    </v-btn>
+                    <v-btn @click="changeImageSize(600)" class="content-sizes" :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl}`">600px</v-btn>
+                    <v-checkbox label="Enable/Disable Card Content" v-model="card.showCardContent" hide-details class="shrink mr-2 mb-3"></v-checkbox>
+                    <wysiwyg v-model="card.html_content" />
+                    <v-layout align-center>
+                        <v-checkbox label="Enable/Disable Card Actions" v-model="card.showCardActions" hide-details class="shrink mr-2"></v-checkbox>
+                        <v-spacer></v-spacer>
+                        <v-btn :disabled="card.actions.buttons.length === 3" flat @click="addMoreActions()">Add Another</v-btn>
+                        <v-btn :disabled="card.actions.buttons.length <= 1" flat @click="removeActions()">Remove Last</v-btn>
+                    </v-layout>
+                    <v-layout v-for="(item, index) in card.actions.buttons" :key="index">
+                        <v-flex xs5>
+                            <v-text-field v-model="item.actionLabel" label="Card Name" required class="px-2"></v-text-field>
+                        </v-flex>
+                        <v-flex xs5>
+                            <v-text-field v-if="item.action_type === 'Url'" v-model="item.content_url" :label="typeAction" required></v-text-field>
+                            <v-select v-else :items="Forms" :label="item.action_type" class="px-2"></v-select>
+                        </v-flex>
+                        <v-flex xs2>
+                            <v-select :items="buttonActionType" v-model="item.action_type" label="Type" class="px-2"></v-select>
+                        </v-flex>
+                    </v-layout>
+                    <v-checkbox label="Show/Checkbox Whatsapp Notification" v-model="card.actions.showCheckBoxWhatsappNotification" hide-details class="shrink mr-2 mt-0"></v-checkbox>
+                    <v-checkbox label="Show/Checkbox App Notification" v-model="card.actions.showCheckBoxAppNotification" hide-details class="shrink mr-2 mt-0"></v-checkbox>
+                    <v-btn flat @click="saveContentCard()">Save</v-btn>
+                    <div>{{ card }}</div>
+                </v-form>
+            </v-flex>
+            <v-flex xs5>
+                <div class="section-card-content is-flex">
+                    <h4 class="card-title" v-bind:class="[card.title === '' ? 'emptyClass emptyCardName' : '']">{{ card.title }}</h4>
+                    <div class="phone"></div>
+                    <v-card>
+                        <transition name="bounce">
+                            <v-card-media v-if="card.showCardImage" class="image" :contain="true" :height="card.imageSizes" :src="card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl" />
+                        </transition>
+                        <transition name="bounce">
+                            <v-card-text v-if="card.showCardContent">
+                                <div v-bind:class="[card.html_content === '' ? `emptyClass emptyCardContent ${templateClass}` : `${templateClass}`]" v-html="card.html_content"></div>
+                            </v-card-text>
+                        </transition>
+                        <transition name="bounce">
+                            <v-card-actions v-if="card.showCardActions">
+                                <v-layout>
+                                    <div v-for="item in card.actions.buttons" :key="item">
+                                        <v-btn flat>{{ item.actionLabel }}</v-btn>
+                                    </div>
+                                    <v-spacer></v-spacer>
+                                    <transition name="bounce">
+                                        <v-checkbox v-if="card.actions.showCheckBoxWhatsappNotification" label="Whatsapp Notfication" hide-details class="shrink mr-2 mt-0"></v-checkbox>
+                                    </transition>
+                                    <transition name="bounce">
+                                        <v-checkbox v-if="card.actions.showCheckBoxAppNotification" label="App Notification" hide-details class="shrink mr-2 mt-0"></v-checkbox>
+                                    </transition>
+                                </v-layout>
+                            </v-card-actions>
+                        </transition>
+                    </v-card>
+                </div>
+            </v-flex>
+        </v-layout>
+    </div>
+</template>
+<script>
+export default {
+  data: () => ({
+    templateClass: 'base',
+    input: '',
+    isActionEnable: false,
+    isRemoveActionVisible: false,
+    card: {
+      title: '',
+      imgUrl: '',
+      showCardImage: true,
+      imgDefaultUrl: require('@/assets/card_default_bg.png'),
+      imageSizes: '400px',
+      html_content: '',
+      showCardContent: true,
+      showCardActions: true,
+      actions: {
+        buttons: [
+          {
+            actionLabel: 'Action',
+            content_url: '',
+            action_type: 'Url'
+          }
+        ],
+        showCheckBoxWhatsappNotification: true,
+        showCheckBoxAppNotification: true
+      }
+    },
+    buttonActionType: ['Url', 'Form'],
+    typeAction: 'Url',
+    Forms: ['Poll - Quality Services', 'Poll - Offert Seeker']
+
+  }),
+  watch: {
+    'card.imgUrl' (value) {
+      if (value === '') {
+        this.card.imgDefaultUrl = require('@/assets/card_default_bg.png')
+      } else {
+        this.card.imgUrl = value
+        this.card.imgDefaultUrl = ''
+      }
+    },
+    card () {
+      console.log(this.card)
+    }
+  },
+  methods: {
+    changeImageSize (sizes) {
+      this.card.imageSizes = `${sizes}px`
+    },
+    toggle (which) {
+      switch (which) {
+        case 'Image':
+          this.card.showCardImage = !this.card.showCardImage
+          break
+      }
+    },
+    addMoreActions () {
+      if (this.card.actions.buttons.length < 3) {
+        this.isRemoveActionVisible = true
+        var actionButtonTemplate = {
+          actionLabel: 'Action',
+          content_url: '',
+          action_type: 'Url'
+        }
+        this.card.actions.buttons.push(actionButtonTemplate)
+      } else {
+        this.isActionEnable = !this.isActionEnable
+      }
+    },
+    saveContentCard () {
+      this.card.html_content.push(this.card.content)
+      console.log(this.card.html_content)
+    },
+    removeActions () {
+      this.card.actions.buttons.pop()
+    }
+  }
+}
+</script>
+
+<style>
+.full-height {
+    min-height: 100%;
+}
+.full-width {
+    min-width: 100%;
+}
+.content-card {
+    min-height: 100vh;
+}
+
+.card-previewed {
+    max-width: 598px;
+    margin: auto;
+}
+
+.content-sizes {
+    padding: 3rem!important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    margin-top: 1rem!important;
+}
+.content-sizes .v-btn__content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    background: #fff;
+}
+
+.top-check {
+    position: absolute!important;
+    top: -50px;
+    right: 0;
+}
+
+.section-card-content {
+    padding: 1rem;
+}
+
+.emptyClass:before {
+    font-style: italic;
+    color: rgb(212, 212, 212);
+}
+
+.image {
+    cursor: pointer;
+    width: 100%;
+    -webkit-transition: all .5s;
+    /* Safari */
+}
+.image .v-card__media__background {
+    background-size: cover!important;
+}
+.card-title {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.emptyCardContent:before {
+    content: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptate omnis eligendi odio mollitia explicabo veritatis nihil, voluptatem quidem fugiat dignissimos, rerum eius earum alias inventore assumenda unde vero optio dicta ab? Blanditiis corporis nemo aspernatur ipsa, nihil quasi officia quas? Labore eos veniam cum numquam impedit, dolor alias ipsa praesentium. ...";
+}
+
+.emptyCardName:before {
+    content: "Card Name";
+}
+
+.section-card-content .el-card__body {
+    display: flex;
+    flex-flow: column;
+}
+
+.smooth-away {
+    transition: height .2s;
+}
+
+.bounce-enter-active {
+  animation: bounce-in .8s;
+}
+.bounce-leave-active {
+  animation: bounce-in .8s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.base h1 {
+    /* color: antiquewhite; */
+}
+</style>

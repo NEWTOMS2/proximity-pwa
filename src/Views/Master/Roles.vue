@@ -1,20 +1,21 @@
 <template>
-        <div>
+    <div class="container" transition="slide-x-transition">
         <v-toolbar flat color="white">
-            <v-toolbar-title class="elegant__title"><img style="width: 25%;" src="@/assets/beacon.png" alt="" srcset=""><h3>Beacons</h3></v-toolbar-title>
+            <v-toolbar-title class="elegant__title"><h3>Roles</h3></v-toolbar-title>
             <v-spacer></v-spacer>
             <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
             <v-dialog v-model="dialog" max-width="500px">
+              <v-btn slot="activator" color="primary" @click="newRole()" dark class="mb-2">New Role</v-btn>
                 <v-card>
-                    <v-card-title>
-                        <span class="headline">{{ formTitle }}</span>
+                    <v-card-title :class="formTitleColor" class="">
+                        <span class="white-letter display-1">{{ formTitle }}</span>
                     </v-card-title>
                     <v-card-text>
                         <v-container grid-list-md>
                             <v-layout wrap>
-                                <v-flex xs12 sm6 md4>
-                                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                                </v-flex>
+                                    <v-form  class="full-weight" v-model="valid">
+                                        <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedItem.name" label="Role Name"></v-text-field>
+                                    </v-form>
                             </v-layout>
                         </v-container>
                     </v-card-text>
@@ -26,12 +27,9 @@
                 </v-card>
             </v-dialog>
         </v-toolbar>
-        <v-data-table :headers="headers" :items="beacons" hide-actions :search="search">
+        <v-data-table :loading="isFetching" :headers="headers" :items="roles" hide-actions :search="search">
             <template slot="items" slot-scope="props">
-                <td>{{ props.item.id }}</td>
                 <td>{{ props.item.name }}</td>
-                <td>{{ props.item.type }}</td>
-                <td>{{ props.item.radius }}</td>
                 <td class="justify-center layout px-0">
                     <v-icon small class="mr-2" @click="editItem(props.item)">
                         edit
@@ -45,25 +43,27 @@
     </div>
 </template>
 
+
 <script>
 import {
-  fetchBeaconsPlaceholder,
-  fetchBeaconPlaceholder,
-  creatBeaconPlaceholder,
-  updateBeaconPlaceholder
-} from '@/api/placeholder/beacons'
+  fetchAllRoles,
+  fetchRoleById,
+  /* fetchAllRolesByOrganization, */
+  creatRole,
+  updateRole
+} from '@/api/roles'
 export default {
   data: () => ({
     search: '',
+    repassword: '',
     dialog: false,
+    isFetching: false,
+    isFetchingItem: false,
     headers: [
-      {text: 'Id', value: 'id', width: '50px'},
-      {text: 'Name', value: 'name'},
-      {text: 'Type', value: 'type'},
-      {text: 'Radius', value: 'radius'},
-      {text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px'}
+      { text: 'Name', value: 'name' },
+      { text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px' }
     ],
-    beacons: [],
+    roles: [],
     editedIndex: -1,
     editedItem: {
       id: 0,
@@ -80,7 +80,10 @@ export default {
 
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return this.editedIndex === -1 ? 'New Role' : 'Edit Role'
+    },
+    formTitleColor () {
+      return this.editedIndex === -1 ? 'light-blue darken-1' : 'amber darken-1'
     }
   },
 
@@ -96,16 +99,19 @@ export default {
 
   methods: {
     getData () {
-      fetchBeaconsPlaceholder().then(response => {
-        this.beacons = response.data
+      fetchAllRoles().then(response => {
+        this.roles = response.data
       })
     },
 
     editItem (item) {
-      fetchBeaconPlaceholder(item.id).then(response => {
+      this.cleanData()
+      this.isFetchingItem = true
+      fetchRoleById(item.id).then(response => {
+        this.isFetchingItem = false
         this.editedItem = Object.assign({}, response.data)
       })
-      this.editedIndex = this.beacons.indexOf(item)
+      this.editedIndex = this.roles.indexOf(item)
       this.dialog = true
     },
 
@@ -124,30 +130,34 @@ export default {
 
     save () {
       if (this.editedIndex > -1) {
-        Object.assign(this.beacons[this.editedIndex], this.editedItem)
-        updateBeaconPlaceholder(this.editedItem).then(response => {
+        Object.assign(this.roles[this.editedIndex], this.editedItem)
+        updateRole(this.editedItem.id, this.editedItem).then(response => {
           console.log(this.editedItem)
+        }).then(() => {
+          this.getData()
         })
       } else {
-        creatBeaconPlaceholder(this.editedItem).then(response => {
+        creatRole(this.editedItem).then(response => {
           console.log(response)
-          this.beacons.push(this.editedItem)
+          this.roles.push(this.editedItem)
+        }).then(() => {
+          this.getData()
         })
       }
       this.close()
+    },
+    newRole () {
+      this.cleanData()
+    },
+    cleanData () {
+      Object.keys(this.editItem).forEach(key => { this.editItem[key] = null })
     }
   }
 }
 </script>
 
 <style>
-.app-beacon{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.elegant__title {
-  display: flex;
-  align-items: center;
+.full-weight {
+    width: 100%;
 }
 </style>

@@ -5,7 +5,7 @@
              <v-form class="app-access-form">
               <h1>Proximity Marketing Agency</h1>
               <h2>Access</h2>
-                  <v-text-field v-model="form.userName" prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
+                  <v-text-field v-model="form.username" prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
                   <v-text-field v-model="form.password" id="password" prepend-icon="lock" name="password" label="Password" type="password"></v-text-field>
                   <v-layout justify-center>
                       <v-btn color="primary" @click="onSubmit()">Login</v-btn>
@@ -19,13 +19,13 @@
 export default {
   data: () => ({
     form: {
-      userName: 'user',
-      password: 'nomorelies'
+      username: 'drugstoreuser',
+      password: 'demo#2018'
     }
   }),
   methods: {
     onSubmit () {
-      this.$store.dispatch('logInOut').then(() => {
+      this.$store.dispatch('userLogIn', this.form).then(() => {
         this.$router.push({ path: '/app' })
       })
     }

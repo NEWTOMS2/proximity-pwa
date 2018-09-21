@@ -1,11 +1,11 @@
 <template>
     <div class="container" transition="slide-x-transition">
         <v-toolbar flat color="white">
-            <v-toolbar-title class="elegant__title"><img style="width: 25%;" src="@/assets/beacon.png" alt="" srcset=""><h3>Places</h3></v-toolbar-title>
+            <v-toolbar-title class="elegant__title"><img style="width: 25%;" src="@/assets/beacon.png" alt="" srcset=""><h3>Beacon Hierarchies</h3></v-toolbar-title>
             <v-spacer></v-spacer>
             <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
             <v-dialog v-model="dialog" max-width="500px">
-              <v-btn slot="activator" @click="newPlace()" color="primary" dark class="mb-2">New Place</v-btn>
+              <v-btn slot="activator" @click="newBeaconHierarchy()" color="primary" dark class="mb-2">New Beacon Hierarchy</v-btn>
                 <v-card>
                     <v-card-title :class="formTitleColor">
                         <span class="white-letter display-1">{{ formTitle }}</span>
@@ -14,7 +14,7 @@
                         <v-container grid-list-md>
                             <v-layout wrap>
                                 <v-flex xs12 sm12 md12>
-                                    <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedPlace.name" label="Place"></v-text-field>
+                                    <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedBeaconHierarchy.name" label="BeaconHierarchy"></v-text-field>
                                 </v-flex>
                             </v-layout>
                         </v-container>
@@ -32,7 +32,7 @@
                 <td>{{ props.item.id }}</td>
                 <td>{{ props.item.name }}</td>
                 <td class="justify-center layout px-0">
-                    <v-icon small class="mr-2" @click="editPlace(props.item)">
+                    <v-icon small class="mr-2" @click="editBeaconHierarchy(props.item)">
                         edit
                     </v-icon>
                 </td>
@@ -47,11 +47,11 @@
 
 <script>
 import {
-  fetchAllPlaces,
-  fetchPlaceById,
-  creatPlace,
-  updatePlace
-} from '@/api/places'
+  fetchAllBeaconHierarchies,
+  fetchBeaconHierarchyById,
+  creatBeaconHierarchy,
+  updateBeaconHierarchy
+} from '@/api/beacon_hierarchy'
 export default {
   data: () => ({
     search: '',
@@ -65,7 +65,7 @@ export default {
     ],
     places: [],
     editedIndex: -1,
-    editedPlace: {
+    editedBeaconHierarchy: {
       id: 0,
       id_organization: '',
       name: ''
@@ -74,7 +74,7 @@ export default {
 
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New Place' : 'Edit Place'
+      return this.editedIndex === -1 ? 'New Beacon Hierarchy' : 'Edit Beacon Hierarchy'
     },
     formTitleColor () {
       return this.editedIndex === -1 ? 'light-blue darken-1' : 'amber darken-1'
@@ -94,24 +94,24 @@ export default {
   methods: {
     getData () {
       this.isFetching = true
-      fetchAllPlaces().then(response => {
+      fetchAllBeaconHierarchies().then(response => {
         this.places = response.data
         this.isFetching = false
       })
     },
 
-    editPlace (item) {
+    editBeaconHierarchy (item) {
       this.cleanData()
       this.isFetchingItem = true
-      fetchPlaceById(item.id).then(response => {
-        this.editedPlace = Object.assign({}, response.data)
+      fetchBeaconHierarchyById(item.id).then(response => {
+        this.editedBeaconHierarchy = Object.assign({}, response.data)
         this.isFetchingItem = false
       })
       this.editedIndex = this.places.indexOf(item)
       this.dialog = true
     },
 
-    /* deletePlace (item) {
+    /* deleteBeaconHierarchy (item) {
       const index = this.desserts.indexOf(item)
       confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
     }, */
@@ -119,21 +119,21 @@ export default {
     close () {
       this.dialog = false
       setTimeout(() => {
-        this.editedPlace = Object.assign({}, this.defaultPlace)
+        this.editedBeaconHierarchy = Object.assign({}, this.defaultBeaconHierarchy)
         this.editedIndex = -1
       }, 300)
     },
 
     save () {
       if (this.editedIndex > -1) {
-        Object.assign(this.places[this.editedIndex], this.editedPlace)
-        updatePlace(this.editedPlace.id, this.editedPlace).then(response => {
+        Object.assign(this.places[this.editedIndex], this.editedBeaconHierarchy)
+        updateBeaconHierarchy(this.editedBeaconHierarchy.id, this.editedBeaconHierarchy).then(response => {
           console.log(response)
         }).then(() => {
           this.getData()
         })
       } else {
-        creatPlace(this.editedPlace).then(response => {
+        creatBeaconHierarchy(this.editedBeaconHierarchy).then(response => {
           console.log(response)
         }).then(() => {
           this.getData()
@@ -141,11 +141,11 @@ export default {
       }
       this.close()
     },
-    newPlace () {
+    newBeaconHierarchy () {
       this.cleanData()
     },
     cleanData () {
-      Object.keys(this.editedPlace).forEach(key => { this.editedPlace[key] = null })
+      Object.keys(this.editedBeaconHierarchy).forEach(key => { this.editedBeaconHierarchy[key] = null })
     }
   }
 }

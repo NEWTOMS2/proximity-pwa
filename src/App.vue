@@ -78,4 +78,10 @@
   opacity: 0;
   transform: translateX(30px);
 }
+.full-weight {
+    width: 100%;
+}
+.white-letter {
+  color: #FAFAFA;
+}
 </style>

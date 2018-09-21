@@ -8,6 +8,9 @@ import BeaconHierarchy from '@/Views/ViewsUser/BeaconHierarchy'
 import BeaconPlaceHierarchy from '@/Views/ViewsUser/BeaconPlaceHierarchy'
 import Places from '@/Views/ViewsUser/Places'
 import ContentCards from '@/Views/ViewsUser/ContentCards'
+import Users from '@/Views/Master/Users'
+import Roles from '@/Views/Master/Roles'
+import Organizations from '@/Views/Master/Organizations'
 // import { Loading } from 'element-ui';
 /* import Main from '@/Views/Main'
 import LayoutContentCarousel from '@/components/Layouts/LayoutContent/LayoutContentCarousel'
@@ -47,12 +50,15 @@ export default new Router({
       name: 'Home',
       component: Home,
       children: [
-        { path: '/app/beacons/all', component: Beacons },
-        { path: '/app/beacons/types', component: BeaconTypes },
-        { path: '/app/beacons/hierarchy', component: BeaconHierarchy },
-        { path: '/app/beacons/placehierarchy', component: BeaconPlaceHierarchy },
-        { path: '/app/places', component: Places },
-        { path: '/app/contentcards', component: ContentCards }
+        { path: '/app/beacons/all', component: Beacons, meta: {title: 'All Beacons', icon: 'scatter_plot', group: 'beacon'} },
+        { path: '/app/beacons/types', component: BeaconTypes, meta: {title: 'Types', icon: 'inear_scale', group: 'beacon'} },
+        { path: '/app/beacons/hierarchy', component: BeaconHierarchy, meta: {title: 'Hierarchy', icon: 'border_vertical', group: 'beacon'} },
+        { path: '/app/beacons/placehierarchy', component: BeaconPlaceHierarchy, meta: {title: 'Place Hierarchy', icon: 'group_work', group: 'beacon'} },
+        { path: '/app/places', component: Places, meta: {title: 'Places', icon: 'place', group: ''} },
+        { path: '/app/contentcards', component: ContentCards, meta: {title: 'Content Cards', icon: 'art_track', group: ''} },
+        { path: '/app/master/users', component: Users, meta: {title: 'Users', icon: 'people', group: ''} },
+        { path: '/app/master/roles', component: Roles, meta: {title: 'Roles', icon: 'category', group: ''} },
+        { path: '/app/master/organizations', component: Organizations, meta: {title: 'Organization', icon: 'store_mall_directory', group: ''} }
       ]
     }
   ]

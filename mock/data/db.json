@@ -8,7 +8,7 @@
     },
     {
       "id": "12",
-      "name": "Jade",
+      "name": "Jades",
       "type": "Advertisement Pusher",
       "radius": "45m"
     },
@@ -61,7 +61,8 @@
       "radius": "45m"
     }
   ],
-  "beacons_types": [{
+  "beacons_types": [
+    {
       "id": 1,
       "name": "Advertisement Pusher"
     },
@@ -92,9 +93,16 @@
     {
       "name": "Constumer Inviter",
       "id": 8
+    },
+    {
+      "id": 9,
+      "name": "Ligth Observer",
+      "type": "",
+      "radius": 0
     }
   ],
-  "beacons_hierarchy": [{
+  "beacons_hierarchy": [
+    {
       "id": 1,
       "name": "Front Store"
     },
@@ -111,7 +119,8 @@
       "name": "Offers 50%"
     }
   ],
-  "places": [{
+  "places": [
+    {
       "id": 1,
       "name": "Front Store"
     },

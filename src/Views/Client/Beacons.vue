@@ -1,10 +1,12 @@
 <template>
-    <div transition="slide-x-transition">
+        <div class="container">
         <v-toolbar flat color="white">
-            <v-toolbar-title class="elegant__title"><img style="width: 25%;" src="@/assets/beacon.png" alt="" srcset=""><h3>Beacons - Types</h3></v-toolbar-title>
+            <v-toolbar-title class="elegant__title"><img style="width: 25%;" src="@/assets/beacon.png" alt="" srcset=""><h3>Beacons</h3></v-toolbar-title>
             <v-spacer></v-spacer>
             <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+            <v-btn slot="activator" color="primary" dark class="mb-2">New Item</v-btn>
             <v-dialog v-model="dialog" max-width="500px">
+              <v-btn slot="activator" color="primary" dark class="mb-2">New Item</v-btn>
                 <v-card>
                     <v-card-title>
                         <span class="headline">{{ formTitle }}</span>
@@ -12,8 +14,8 @@
                     <v-card-text>
                         <v-container grid-list-md>
                             <v-layout wrap>
-                                <v-flex xs12 sm6 md4>
-                                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                                <v-flex xs12 sm12 md12>
+                                    <v-text-field v-model="editedItem.name" label="Beacon Name"></v-text-field>
                                 </v-flex>
                             </v-layout>
                         </v-container>
@@ -26,10 +28,12 @@
                 </v-card>
             </v-dialog>
         </v-toolbar>
-        <v-data-table :headers="headers" :items="beaconsTypes" hide-actions :search="search">
+        <v-data-table :headers="headers" :items="beacons" hide-actions :search="search">
             <template slot="items" slot-scope="props">
                 <td>{{ props.item.id }}</td>
                 <td>{{ props.item.name }}</td>
+                <td>{{ props.item.type }}</td>
+                <td>{{ props.item.radius }}</td>
                 <td class="justify-center layout px-0">
                     <v-icon small class="mr-2" @click="editItem(props.item)">
                         edit
@@ -43,24 +47,25 @@
     </div>
 </template>
 
-
 <script>
 import {
-  fetchBeaconsTypesPlaceholder,
-  fetchBeaconTypePlaceholder,
-  creatBeaconTypePlaceholder,
-  updateBeaconTypePlaceholder
-} from '@/api/placeholder/beacon_types'
+  fetchBeaconsPlaceholder,
+  fetchBeaconPlaceholder,
+  creatBeaconPlaceholder,
+  updateBeaconPlaceholder
+} from '@/api/placeholder/beacons'
 export default {
   data: () => ({
     search: '',
     dialog: false,
     headers: [
-      { text: 'Id', value: 'id', width: '50px' },
-      { text: 'Name', value: 'name' },
-      { text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px' }
+      {text: 'Id', value: 'id', width: '50px'},
+      {text: 'Name', value: 'name'},
+      {text: 'Type', value: 'type'},
+      {text: 'Radius', value: 'radius'},
+      {text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px'}
     ],
-    beaconsTypes: [],
+    beacons: [],
     editedIndex: -1,
     editedItem: {
       id: 0,
@@ -93,16 +98,16 @@ export default {
 
   methods: {
     getData () {
-      fetchBeaconsTypesPlaceholder().then(response => {
-        this.beaconsTypes = response.data
+      fetchBeaconsPlaceholder().then(response => {
+        this.beacons = response.data
       })
     },
 
     editItem (item) {
-      fetchBeaconTypePlaceholder(item).then(response => {
+      fetchBeaconPlaceholder(item.id).then(response => {
         this.editedItem = Object.assign({}, response.data)
       })
-      this.editedIndex = this.beaconsTypes.indexOf(item)
+      this.editedIndex = this.beacons.indexOf(item)
       this.dialog = true
     },
 
@@ -121,14 +126,14 @@ export default {
 
     save () {
       if (this.editedIndex > -1) {
-        Object.assign(this.beaconsTypes[this.editedIndex], this.editedItem)
-        updateBeaconTypePlaceholder(this.editedItem).then(response => {
+        Object.assign(this.beacons[this.editedIndex], this.editedItem)
+        updateBeaconPlaceholder(this.editedItem).then(response => {
           console.log(this.editedItem)
         })
       } else {
-        creatBeaconTypePlaceholder(this.editedItem).then(response => {
+        creatBeaconPlaceholder(this.editedItem).then(response => {
           console.log(response)
-          this.beaconsTypes.push(this.editedItem)
+          this.beacons.push(this.editedItem)
         })
       }
       this.close()
@@ -138,5 +143,13 @@ export default {
 </script>
 
 <style>
-
+.app-beacon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.elegant__title {
+  display: flex;
+  align-items: center;
+}
 </style>

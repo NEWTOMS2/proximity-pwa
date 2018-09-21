@@ -1,20 +1,21 @@
 <template>
-    <div transition="slide-x-transition">
+    <div class="container" transition="slide-x-transition">
         <v-toolbar flat color="white">
-            <v-toolbar-title class="elegant__title"><img style="width: 25%;" src="@/assets/beacon.png" alt="" srcset=""><h3>Beacons - Hierarchy</h3></v-toolbar-title>
+            <v-toolbar-title class="elegant__title"><h3>Organizations</h3></v-toolbar-title>
             <v-spacer></v-spacer>
             <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
             <v-dialog v-model="dialog" max-width="500px">
+              <v-btn slot="activator" color="primary" @click="newOrganization()" dark class="mb-2">New Organization</v-btn>
                 <v-card>
-                    <v-card-title>
-                        <span class="headline">{{ formTitle }}</span>
+                    <v-card-title :class="formTitleColor" class="">
+                        <span class="white-letter display-1">{{ formTitle }}</span>
                     </v-card-title>
                     <v-card-text>
                         <v-container grid-list-md>
                             <v-layout wrap>
-                                <v-flex xs12 sm6 md4>
-                                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                                </v-flex>
+                                    <v-form  class="full-weight" v-model="valid">
+                                        <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedItem.name" label="Organization Name"></v-text-field>
+                                    </v-form>
                             </v-layout>
                         </v-container>
                     </v-card-text>
@@ -26,9 +27,8 @@
                 </v-card>
             </v-dialog>
         </v-toolbar>
-        <v-data-table :headers="headers" :items="beaconsTypes" hide-actions :search="search">
+        <v-data-table :loading="isFetching" :headers="headers" :items="roles" hide-actions :search="search">
             <template slot="items" slot-scope="props">
-                <td>{{ props.item.id }}</td>
                 <td>{{ props.item.name }}</td>
                 <td class="justify-center layout px-0">
                     <v-icon small class="mr-2" @click="editItem(props.item)">
@@ -40,27 +40,30 @@
                 <v-btn color="primary" @click="getData">Reset</v-btn>
             </template>
         </v-data-table>
-        </div>
+    </div>
 </template>
 
 
 <script>
 import {
-  fetchBeaconsHierarchyPlaceholder,
-  fetchBeaconHierarchyPlaceholder,
-  creatBeaconHierarchyPlaceholder,
-  updateBeaconHierarchyPlaceholder
-} from '@/api/placeholder/beacon_hierarchy'
+  fetchAllOrganizations,
+  fetchOrganizationById,
+  /* fetchAllOrganizationsByOrganization, */
+  creatOrganization,
+  updateOrganization
+} from '@/api/organizations'
 export default {
   data: () => ({
     search: '',
+    repassword: '',
     dialog: false,
+    isFetching: false,
+    isFetchingItem: false,
     headers: [
-      { text: 'Id', value: 'id', width: '50px' },
       { text: 'Name', value: 'name' },
       { text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px' }
     ],
-    beaconsTypes: [],
+    roles: [],
     editedIndex: -1,
     editedItem: {
       id: 0,
@@ -77,7 +80,10 @@ export default {
 
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return this.editedIndex === -1 ? 'New Organization' : 'Edit Organization'
+    },
+    formTitleColor () {
+      return this.editedIndex === -1 ? 'light-blue darken-1' : 'amber darken-1'
     }
   },
 
@@ -93,16 +99,19 @@ export default {
 
   methods: {
     getData () {
-      fetchBeaconsHierarchyPlaceholder().then(response => {
-        this.beaconsTypes = response.data
+      fetchAllOrganizations().then(response => {
+        this.roles = response.data
       })
     },
 
     editItem (item) {
-      fetchBeaconHierarchyPlaceholder(item).then(response => {
+      this.cleanData()
+      this.isFetchingItem = true
+      fetchOrganizationById(item.id).then(response => {
+        this.isFetchingItem = false
         this.editedItem = Object.assign({}, response.data)
       })
-      this.editedIndex = this.beaconsTypes.indexOf(item)
+      this.editedIndex = this.roles.indexOf(item)
       this.dialog = true
     },
 
@@ -121,22 +130,34 @@ export default {
 
     save () {
       if (this.editedIndex > -1) {
-        Object.assign(this.beaconsTypes[this.editedIndex], this.editedItem)
-        updateBeaconHierarchyPlaceholder(this.editedItem).then(response => {
+        Object.assign(this.roles[this.editedIndex], this.editedItem)
+        updateOrganization(this.editedItem.id, this.editedItem).then(response => {
           console.log(this.editedItem)
+        }).then(() => {
+          this.getData()
         })
       } else {
-        creatBeaconHierarchyPlaceholder(this.editedItem).then(response => {
+        creatOrganization(this.editedItem).then(response => {
           console.log(response)
-          this.beaconsTypes.push(this.editedItem)
+          this.roles.push(this.editedItem)
+        }).then(() => {
+          this.getData()
         })
       }
       this.close()
+    },
+    newOrganization () {
+      this.cleanData()
+    },
+    cleanData () {
+      Object.keys(this.editItem).forEach(key => { this.editItem[key] = null })
     }
   }
 }
 </script>
 
 <style>
-
+.full-weight {
+    width: 100%;
+}
 </style>

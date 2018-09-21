@@ -54,6 +54,7 @@
             <span class="title ml-3 mr-5">NEWTOMS&nbsp;<span class="font-weight-light">Proximity Marketing Agency (NPMA)</span></span>
             <!-- <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field> -->
             <v-spacer></v-spacer>
+            <span>{{organization}}</span>
             <v-btn flat @click="onSubmit">Log Out</v-btn>
         </v-toolbar>
     </div>
@@ -79,7 +80,10 @@ export default {
         ]
       },
       { icon: 'place', text: 'Places', path: '/app/places' },
-      { icon: 'art_track', text: 'Content Cards', path: '/app/contentcards' }
+      { icon: 'art_track', text: 'Content Cards', path: '/app/contentcards' },
+      { text: 'Users', path: '/app/master/users', icon: 'people' },
+      { text: 'Roles', path: '/app/master/roles', icon: 'category' },
+      { text: 'Organizations', path: '/app/master/organizations', icon: 'store_mall_directory' }
       /* { divider: true },
       { heading: 'Labels' },
       { icon: 'add', text: 'Create new label' },
@@ -95,13 +99,28 @@ export default {
     ]
   }),
   created () {
-    console.log(this.$router)
+    this.configRoutes()
+  },
+  computed: {
+    organization () {
+      return this.$store.state.user.info.organization
+    }
   },
   methods: {
     onSubmit () {
       this.$store.dispatch('logInOut').then(() => {
         this.$router.push({path: '/', replace: true})
       })
+    },
+    configRoutes () {
+      let items = []
+      this.$router.options.routes[1].children.forEach(element => {
+        if (element.meta.group !== '') {
+          items.push(element)
+        }
+      })
+      console.log(items)
+      // console.log(this.$router.options[1].children)
     }
   },
   props: {

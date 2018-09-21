@@ -1,8 +1,15 @@
 <template>
-    <div class="container-places-canvas flex is-flex oppa-column-style">
-        <h2>Beacons - Place's Hierarchy</h2>
-        <div class="app-drag-and-drop-container flex side-padding">
-            <div class="places">
+    <div>
+        <v-toolbar color="white" flat>
+            <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
+            <h2>Beacons - Place's Hierarchy</h2>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+            </v-toolbar-items>
+        </v-toolbar>
+        <v-layout row wrap>
+            <v-flex xs8>
+                <v-continer fill-height>
                 <h2>Places</h2>
                 <div class="place-container" v-for="place in beaconPlaceHierarchy" :key="place.id">
                     <v-card>
@@ -22,12 +29,10 @@
                                                     <v-list-tile-title>{{ item.name }}</v-list-tile-title>
                                                 </v-list-tile-content>
                                             </v-list-tile>
-
                                             <v-list-tile>
                                                 <v-list-tile-content>
                                                     <v-list-tile-title>{{ item.type }}</v-list-tile-title>
                                                 </v-list-tile-content>
-
                                                 <v-list-tile-action>
                                                     <v-icon>{{ key }}</v-icon>
                                                 </v-list-tile-action>
@@ -36,7 +41,6 @@
                                                 <v-list-tile-content>
                                                     <v-list-tile-title>{{ item.radius }}</v-list-tile-title>
                                                 </v-list-tile-content>
-
                                                 <v-list-tile-action>
                                                     <v-icon>{{ key }}</v-icon>
                                                 </v-list-tile-action>
@@ -48,8 +52,9 @@
                         </div>
                     </v-card>
                 </div>
-            </div>
-            <div class="unassigned-beacons">
+                </v-continer>
+            </v-flex>
+             <v-flex xs4>
               <v-card>
                  <v-card-title primary-title>
                   <h2>Unassigned Beacons</h2>
@@ -61,7 +66,6 @@
                                     <v-list-tile-title>{{ item.name }}</v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
-
                             <v-list-tile>
                                 <v-list-tile-content>
                                     <v-list-tile-title><span class="bold">Type: </span>{{item.type }}</v-list-tile-title>
@@ -81,8 +85,8 @@
                         </v-list-group>
                     </draggable>
               </v-card>
-            </div>
-        </div>
+             </v-flex>
+        </v-layout>
     </div>
 </template>
 
@@ -93,7 +97,7 @@ import { fetchBeaconsPlaceHierarchyPlaceholder } from '@/api/placeholder/beacon_
 export default {
   components: {draggable},
   data: () => ({
-    numbers: [ 1, 2, 3, 4, 5 ],
+    drawer: true,
     items: [{id: 1, text: 'Hallo1'}, {id: 2, text: 'Hallo2'}],
     beaconPlaceHierarchy: [],
     unassignedBeacons: []

@@ -5,7 +5,7 @@ const services = Axios.create({
   mode: 'no-cors',
   // baseURL: 'https://json-server-heroku-qlldvzrmtq.now.sh',
   // baseURL: 'http://localhost:3000',
-  baseURL: process.env.ROOT_API,
+  // baseURL: process.env.ROOT_API,
   headers: {
     'crossDomain': true
   }

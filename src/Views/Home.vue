@@ -46,6 +46,9 @@ export default {
 </script>
 
 <style>
+.all-sky.container {
+  padding: inherit!important;
+}
 .all-sky {
   background: #fff;
   height: 100%;
