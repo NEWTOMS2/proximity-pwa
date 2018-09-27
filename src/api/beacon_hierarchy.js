@@ -1,6 +1,6 @@
 import request from '@/utils/requester'
 import store from '@/store'
-const baseApiUrl = `http://npma-beacons-experience-api.us-e1.cloudhub.io/api`
+const baseApiUrl = `https://npma-beacons-experience-api.us-e1.cloudhub.io/api`
 export function fetchAllBeaconHierarchies () {
   return request({
     baseURL: baseApiUrl,

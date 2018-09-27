@@ -1,5 +1,5 @@
 import request from '@/utils/requester'
-const baseApiUrl = 'http://npma-users-system-api.us-e1.cloudhub.io/api/users'
+const baseApiUrl = 'https://npma-user-experience-api.us-e1.cloudhub.io/api/users'
 
 export function fetchAllRoles () {
   return request({

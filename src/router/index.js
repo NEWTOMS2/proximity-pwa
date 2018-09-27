@@ -7,7 +7,10 @@ import BeaconTypes from '@/Views/Client/BeaconTypes'
 import BeaconHierarchy from '@/Views/Client/BeaconHierarchy'
 import BeaconPlaceHierarchy from '@/Views/Client/BeaconPlaceHierarchy'
 import Places from '@/Views/Client/Places'
-import ContentCards from '@/Views/Client/ContentCards'
+import ContentCards from '@/Views/Media/ContentCards'
+import CreatContentCard from '@/Views/Media/CreatContentCard'
+import UpdateContentCard from '@/Views/Media/UpdateContentCard'
+import MediaContentCard from '@/Views/Media/Content/MediaContentCard'
 import Users from '@/Views/Master/Users'
 import Roles from '@/Views/Master/Roles'
 import Organizations from '@/Views/Master/Organizations'
@@ -19,13 +22,20 @@ export default new Router({
     {
       path: '/',
       name: 'Landing',
-      component: Landing
+      component: Landing,
+      meta: {noRender: true}
     },
     {
       path: '/app',
       name: 'Landing',
       component: Main,
       meta: {title: 'Home', icon: 'lightbulb_outline', roles: ['Client', 'Administrator', 'Master', 'Moderator']}
+    },
+    {
+      path: '/media/content/:id/:idOrganization',
+      name: 'Media Content',
+      component: MediaContentCard,
+      meta: {noRender: true}
     },
     {
       path: '',
@@ -46,7 +56,9 @@ export default new Router({
       component: Main,
       meta: {title: 'Media Content', model: true, prependIcon: 'perm_media', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Client', 'Administrator', 'Moderator']},
       children: [
-        { path: '/app/contentcards', component: ContentCards, meta: {title: 'Content Cards', icon: 'art_track', group: ''} }
+        { path: '/app/contentcards', component: ContentCards, meta: {title: 'Content Cards', icon: 'art_track', group: ''} },
+        { path: '/app/new_content_card', component: CreatContentCard, meta: {title: 'New Content Card', icon: 'art_track', group: ''} },
+        { path: '/app/update_content_card', component: UpdateContentCard, meta: {title: 'Update Content Card', icon: 'art_track', group: ''} }
       ]
     },
     {

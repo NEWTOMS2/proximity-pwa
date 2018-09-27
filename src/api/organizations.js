@@ -1,5 +1,5 @@
 import request from '@/utils/requester'
-const baseApiUrl = 'http://npma-orgaization-experience-api.us-e1.cloudhub.io/api'
+const baseApiUrl = 'https://npma-orgaization-experience-api.us-e1.cloudhub.io/api'
 
 export function fetchAllOrganizations () {
   return request({

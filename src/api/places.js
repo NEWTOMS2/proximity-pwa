@@ -1,6 +1,6 @@
 import request from '@/utils/requester'
 import store from '@/store'
-const baseApiUrl = `http://npma-places-experience-api.us-e1.cloudhub.io/api/`
+const baseApiUrl = `https://npma-places-experience-api.us-e1.cloudhub.io/api/`
 export function fetchAllPlaces () {
   return request({
     baseURL: baseApiUrl,

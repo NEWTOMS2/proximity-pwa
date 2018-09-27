@@ -13,6 +13,7 @@ import 'vuetify/dist/vuetify.min.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css'
 import 'vue-wysiwyg/dist/vueWysiwyg.css'
+import 'html5-device-mockups/dist/device-mockups.min.css'
 
 Vue.use(ElementUI)
 Vue.use(Vuetify)

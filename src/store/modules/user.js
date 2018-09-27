@@ -36,7 +36,7 @@ const actions = {
     userAccess(data).then((result) => {
       let routes = []
       router.options.routes.forEach((element, index) => {
-        if (index > 0) {
+        if (index > 0 && element.meta.noRender !== true) {
           if (element.meta.roles.includes(result.data.role)) {
             routes.push(element)
           }
