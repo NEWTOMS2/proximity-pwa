@@ -4,7 +4,9 @@
     <v-content class="all-universe">
       <v-container fluid class="all-sky">
         <transition name="fade">
+              <keep-alive>
           <router-view/>
+              </keep-alive>
         </transition>
       </v-container>
     </v-content>

@@ -18,6 +18,7 @@ import Organizations from '@/Views/Master/Organizations'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
