@@ -140,9 +140,6 @@ export default {
         this.card.imgUrl = value
         this.card.imgDefaultUrl = ''
       }
-    },
-    card () {
-      console.log(this.card)
     }
   },
   methods: {
@@ -171,6 +168,7 @@ export default {
     },
     saveContentCard () {
       creatContentCard(this.card).then(response => {
+        console.log(response)
         this.message.show = true
         this.message.text = response.data.text
       })
