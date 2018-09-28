@@ -1,9 +1,7 @@
 <template>
 <v-app id="keep">
   <transition name="fade">
-    <keep-alive>
       <router-view/>
-    </keep-alive>
   </transition>
 </v-app>  
 </template>
