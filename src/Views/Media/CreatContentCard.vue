@@ -77,6 +77,21 @@
                 </div>
             </v-flex>
         </v-layout>
+        <v-snackbar
+            v-model="message.show"
+            :bottom="true"
+            :right="true"
+            :timeout="5000"
+        >
+        {{ message.text }}
+        <v-btn
+            color="pink"
+            flat
+            @click="snackbar = false"
+        >
+            Close
+        </v-btn>
+        </v-snackbar>
     </div>
 </template>
 <script>
@@ -87,6 +102,10 @@ export default {
     input: '',
     isActionEnable: false,
     isRemoveActionVisible: false,
+    message: {
+      show: false,
+      text: ''
+    },
     card: {
       title: '',
       imgUrl: '',
@@ -152,7 +171,8 @@ export default {
     },
     saveContentCard () {
       creatContentCard(this.card).then(response => {
-        console.log(response)
+        this.message.show = true
+        this.message.text = response.data.text
       })
     },
     removeActions () {

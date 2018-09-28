@@ -1,4 +1,3 @@
-<template>
   <el-carousel indicator-position="inside">
     <el-carousel-item v-for="image in carouselImages" :key="image.index">
         <img style="height: 100%" :src="image.imgSrc" alt="" srcset="">

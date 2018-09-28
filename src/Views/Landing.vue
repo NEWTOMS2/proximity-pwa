@@ -1,9 +1,9 @@
 <template>
     <v-layout row wrap>
-        <v-flex xs12 sm6 lg4 xl4>
+        <v-flex xs12 sm12 lg4 xl4>
             <landing-layout-access-form/>
         </v-flex>
-        <v-flex xs8 sm6 lg8 xl8>
+        <v-flex class="hidden-sm-and-down" xs8 lg8 xl8>
             <v-carousel hide-delimiters>
                 <v-carousel-item v-for="(item,i) in items" :key="i" :src="item.src"></v-carousel-item>
             </v-carousel>
