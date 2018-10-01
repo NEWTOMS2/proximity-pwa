@@ -12,7 +12,8 @@
             <v-card-actions class="card-actions" v-if="card.showCardActions">
                 <v-layout>
                     <div v-for="item in card.actions.buttons" :key="item">
-                        <v-btn flat>{{ item.actionLabel }}</v-btn>
+                        <a :href="item.contentUrl">{{ item.actionLabel }}</a>
+                        <!-- <v-btn flat>{{ item.actionLabel }}</v-btn> -->
                     </div>
                 </v-layout>
                 <v-layout>

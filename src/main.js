@@ -6,9 +6,10 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
 import Vuetify from 'vuetify'
-
+import VueVideoPlayer from 'vue-video-player'
 import wysiwyg from 'vue-wysiwyg'
 
+import 'video.js/dist/video-js.css'
 import 'vuetify/dist/vuetify.min.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css'
@@ -18,7 +19,7 @@ import 'html5-device-mockups/dist/device-mockups.min.css'
 Vue.use(ElementUI)
 Vue.use(Vuetify)
 Vue.use(wysiwyg, {})
-
+Vue.use(VueVideoPlayer)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

@@ -66,15 +66,10 @@ export default {
     roles: [],
     editedIndex: -1,
     editedItem: {
-      id: 0,
-      name: '',
-      type: '',
-      radius: 0
+      name: ''
     },
     defaultItem: {
-      name: '',
-      type: '',
-      radius: 0
+      name: ''
     }
   }),
 

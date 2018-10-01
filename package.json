@@ -18,10 +18,12 @@
   "dependencies": {
     "element-ui": "^2.4.6",
     "html5-device-mockups": "^3.2.1",
+    "image-exists": "^1.1.0",
     "json-server": "^0.14.0",
     "vue": "^2.5.2",
     "vue-json-viewer": "^1.0.4",
     "vue-router": "^3.0.1",
+    "vue-video-player": "^5.0.2",
     "vue-wysiwyg": "^1.7.2",
     "vuedraggable": "^2.16.0",
     "vuetify": "^1.0.0"

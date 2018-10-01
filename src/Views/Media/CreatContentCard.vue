@@ -2,10 +2,26 @@
     <div class="container flex full-height">
         <v-layout row wrap>
             <v-flex xs7>
-                <v-form v-model="valid" class="full-width">
-                    <v-text-field v-model="card.title" label="Card Name" required></v-text-field>
+                <v-form ref="form" v-model="valid" class="full-width" lazy-validation>
+                    <v-text-field :rules="titleRule" v-model="card.title" label="Card Name" required></v-text-field>
                     <v-checkbox label="Enable/Disable Card Content Image" v-model="card.showCardImage" hide-details class="shrink mr-2"></v-checkbox>
-                    <v-text-field v-model="card.imgUrl" label="Card Content Image" required :append-icon="card.showCardImage ? 'check_box' : 'check_box_outline_blank'" @click:append="toggle('Image')"></v-text-field>
+                    <v-layout>
+                        <v-flex xs10>
+                            <v-text-field v-if="mediaDefault === 'Url'" :rules="imageUrlRule" v-model="card.imgUrl" label="Card Content Image" required append-icon="attach_file" @click:append="upload()"></v-text-field>
+                            <v-text-field v-if="mediaDefault === 'File'" label="Select Image" @click='pickFile' v-model='imageFile.imageName' prepend-icon='attach_file'></v-text-field>
+					<input
+                        v-if="mediaDefault === 'File'"
+						type="file"
+						style="display: none"
+						ref="image"
+						accept="image/*"
+						@change="onFilePicked"
+					>
+                        </v-flex>
+                        <v-flex xs2>
+                            <v-select :items="mediaImageSources" v-model="mediaDefault" label="From" class="px-2"></v-select>
+                        </v-flex>
+                    </v-layout>
                     <v-btn @click="changeImageSize(400)" class="content-sizes" :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl}`">
                         400px
                     </v-btn>
@@ -20,11 +36,11 @@
                     </v-layout>
                     <v-layout v-for="(item, index) in card.actions.buttons" :key="index">
                         <v-flex xs5>
-                            <v-text-field v-model="item.actionLabel" label="Card Name" required class="px-2"></v-text-field>
+                            <v-text-field :rules="actionText" v-model="item.actionLabel" label="Card Name" required class="px-2"></v-text-field>
                         </v-flex>
                         <v-flex xs5>
-                            <v-text-field v-if="item.actionType === 'Url'" v-model="item.contentUrl" :label="typeAction" required></v-text-field>
-                            <v-select v-else :items="Forms" :label="item.actionType" class="px-2"></v-select>
+                            <v-text-field :rules="actionUrl" v-if="item.actionType === 'Url'" v-model="item.contentUrl" :label="typeAction" required></v-text-field>
+                            <v-select :rules="actionForm" v-else :items="Forms" :label="item.actionType" class="px-2"></v-select>
                         </v-flex>
                         <v-flex xs2>
                             <v-select :items="buttonActionType" v-model="item.actionType" label="Type" class="px-2"></v-select>
@@ -106,6 +122,11 @@ export default {
       show: false,
       text: ''
     },
+    imageFile: {
+      imageName: '',
+      imageUrl: '',
+      imageFile: ''
+    },
     card: {
       title: '',
       imgUrl: '',
@@ -127,9 +148,27 @@ export default {
         showCheckBoxAppNotification: true
       }
     },
+    valid: true,
+    titleRule: [
+      v => !!v || 'The card must have a title'
+    ],
+    imageUrlRule: [
+      v => !!v || 'The card must have a cover image'
+    ],
+    actionText: [
+      v => !!v || 'The action must have a description'
+    ],
+    actionUrl: [
+      v => !!v || 'The action must have a url'
+    ],
+    actionForm: [
+      v => !!v || 'Select a form'
+    ],
     buttonActionType: ['Url', 'Form'],
     typeAction: 'Url',
-    Forms: ['Poll - Quality Services', 'Poll - Offert Seeker']
+    Forms: ['Poll - Opt in'],
+    mediaDefault: 'Url',
+    mediaImageSources: ['Url', 'File']
 
   }),
   watch: {
@@ -146,11 +185,27 @@ export default {
     changeImageSize (sizes) {
       this.card.imageSize = `${sizes}px`
     },
-    toggle (which) {
-      switch (which) {
-        case 'Image':
-          this.card.showCardImage = !this.card.showCardImage
-          break
+    pickFile () {
+      this.$refs.image.click()
+    },
+    onFilePicked (e) {
+      const files = e.target.files
+      if (files[0] !== undefined) {
+        this.imageFile.imageName = files[0].name
+        if (this.imageFile.imageName.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          console.log(fr.result)
+          this.card.imgUrl = fr.result
+          this.imageFile.imageFile = files[0] // this is an image file that can be sent to server...
+        })
+      } else {
+        this.imageFile.imageName = ''
+        this.imageFile.imageFile = ''
+        this.imageFile.imageUrl = ''
       }
     },
     addMoreActions () {
@@ -167,11 +222,16 @@ export default {
       }
     },
     saveContentCard () {
-      creatContentCard(this.card).then(response => {
-        console.log(response)
-        this.message.show = true
-        this.message.text = response.data.text
-      })
+      if (this.$refs.form.validate()) {
+        creatContentCard(this.card).then(response => {
+          console.log(response)
+          this.message.show = true
+          this.message.text = response.data.text
+        })
+        console.log('valid')
+      } else {
+        console.log('is not valid')
+      }
     },
     removeActions () {
       this.card.actions.buttons.pop()
