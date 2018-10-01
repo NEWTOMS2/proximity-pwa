@@ -13,7 +13,6 @@
                 <v-layout>
                     <div v-for="item in card.actions.buttons" :key="item">
                         <a :href="item.contentUrl">{{ item.actionLabel }}</a>
-                        <!-- <v-btn flat>{{ item.actionLabel }}</v-btn> -->
                     </div>
                 </v-layout>
                 <v-layout>
