@@ -160,12 +160,14 @@ export default {
 
     save () {
       if (this.editedIndex > -1) {
+        // this.editedItem.password = hasPassword(this.editedItem.password)
         Object.assign(this.users[this.editedIndex], this.editedItem)
         updateUser(this.editedItem.id, this.editedItem).then(response => {
         }).then(() => {
           this.getData()
         })
       } else {
+        // this.editedItem.password = hasPassword(this.editedItem.password)
         creatUser(this.editedItem).then(response => {
           console.log(response)
           this.users.push(this.editedItem)

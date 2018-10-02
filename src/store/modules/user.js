@@ -1,4 +1,5 @@
 import { userAccess } from '@/api/users'
+// import { hasPassword } from '@/utils/encryptor'
 import router from '@/router'
 const state = {
   info: {
@@ -33,6 +34,7 @@ const mutations = {
 
 const actions = {
   userLogIn ({ commit }, data) {
+    // data.password = hasPassword(data.password)
     userAccess(data).then((result) => {
       let routes = []
       router.options.routes.forEach((element, index) => {

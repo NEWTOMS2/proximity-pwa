@@ -8,7 +8,6 @@ import ElementUI from 'element-ui'
 import Vuetify from 'vuetify'
 import VueVideoPlayer from 'vue-video-player'
 import wysiwyg from 'vue-wysiwyg'
-
 import 'video.js/dist/video-js.css'
 import 'vuetify/dist/vuetify.min.css'
 import 'element-ui/lib/theme-chalk/index.css'

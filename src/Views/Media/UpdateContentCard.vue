@@ -6,7 +6,23 @@
                     <v-select :loading="isFetching" :disabled="isFetching" :items="contentCards" item-text="name" item-value="id" v-model="contentCard" label="Content Card"></v-select>
                     <v-text-field v-model="card.title" label="Card Name" required></v-text-field>
                     <v-checkbox label="Enable/Disable Card Content Image" v-model="card.showCardImage" hide-details class="shrink mr-2"></v-checkbox>
-                    <v-text-field v-model="card.imgUrl" label="Card Content Image" required :append-icon="card.showCardImage ? 'check_box' : 'check_box_outline_blank'" @click:append="toggle('Image')"></v-text-field>
+                    <v-layout>
+                        <v-flex xs10>
+                            <v-text-field v-if="mediaDefault === 'Url'" :rules="imageUrlRule" v-model="card.imgUrl" label="Card Content Image" required @click:append="upload()"></v-text-field>
+                            <v-text-field v-if="mediaDefault === 'File'" label="Select Image" @click='pickFile' v-model='imageFile.imageName' prepend-icon='attach_file'></v-text-field>
+					<input
+                        v-if="mediaDefault === 'File'"
+						type="file"
+						style="display: none"
+						ref="image"
+						accept="image/*"
+						@change="onFilePicked"
+					>
+                        </v-flex>
+                        <v-flex xs2>
+                            <v-select :items="mediaImageSources" v-model="mediaDefault" label="From" class="px-2"></v-select>
+                        </v-flex>
+                    </v-layout>
                     <v-btn @click="changeImageSize(400)" class="content-sizes" :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl}`">
                         400px
                     </v-btn>
@@ -89,6 +105,15 @@ export default {
     input: '',
     isActionEnable: false,
     isRemoveActionVisible: false,
+    message: {
+      show: false,
+      text: ''
+    },
+    imageFile: {
+      imageName: '',
+      imageUrl: '',
+      imageFile: ''
+    },
     card: {
       title: '',
       imgUrl: '',
@@ -110,11 +135,30 @@ export default {
         showCheckBoxAppNotification: true
       }
     },
+    valid: true,
+    titleRule: [
+      v => !!v || 'The card must have a title'
+    ],
+    imageUrlRule: [
+      v => !!v || 'The card must have a cover image',
+      v => /(http(s?):)([/|.|\w|\s|-])*\.(?:jpeg|jpg|gif|png)/.test(v) || 'the url must have containt and image'
+    ],
+    actionText: [
+      v => !!v || 'The action must have a description'
+    ],
+    actionUrl: [
+      v => !!v || 'The action must have a url'
+    ],
+    actionForm: [
+      v => !!v || 'Select a form'
+    ],
     contentCard: '',
     contentCards: [],
     buttonActionType: ['Url', 'Form'],
     typeAction: 'Url',
-    Forms: ['Poll - Quality Services', 'Poll - Offert Seeker']
+    Forms: ['Poll - Opt in'],
+    mediaDefault: 'Url',
+    mediaImageSources: ['Url', 'File']
 
   }),
   watch: {
@@ -146,6 +190,30 @@ export default {
     },
     changeImageSize (sizes) {
       this.card.imageSize = `${sizes}px`
+    },
+    pickFile () {
+      this.$refs.image.click()
+    },
+    onFilePicked (e) {
+      const files = e.target.files
+      console.log(files)
+      if (files[0] !== undefined) {
+        this.imageFile.imageName = files[0].name
+        if (this.imageFile.imageName.lastIndexOf('.') <= 0) {
+          return
+        }
+        const fr = new FileReader()
+        fr.readAsDataURL(files[0])
+        fr.addEventListener('load', () => {
+          console.log(fr.result)
+          this.card.imgUrl = fr.result
+          this.imageFile.imageFile = files[0] // this is an image file that can be sent to server...
+        })
+      } else {
+        this.card.imgUrl = ''
+        this.imageFile.imageFile = ''
+        this.imageFile.imageUrl = ''
+      }
     },
     toggle (which) {
       switch (which) {

@@ -16,6 +16,8 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "bcrypt": "^3.0.1",
+    "bcryptjs": "^2.4.3",
     "element-ui": "^2.4.6",
     "html5-device-mockups": "^3.2.1",
     "image-exists": "^1.1.0",

@@ -7,7 +7,7 @@
                     <v-checkbox label="Enable/Disable Card Content Image" v-model="card.showCardImage" hide-details class="shrink mr-2"></v-checkbox>
                     <v-layout>
                         <v-flex xs10>
-                            <v-text-field v-if="mediaDefault === 'Url'" :rules="imageUrlRule" v-model="card.imgUrl" label="Card Content Image" required append-icon="attach_file" @click:append="upload()"></v-text-field>
+                            <v-text-field v-if="mediaDefault === 'Url'" :rules="imageUrlRule" v-model="card.imgUrl" label="Card Content Image" required @click:append="upload()"></v-text-field>
                             <v-text-field v-if="mediaDefault === 'File'" label="Select Image" @click='pickFile' v-model='imageFile.imageName' prepend-icon='attach_file'></v-text-field>
 					<input
                         v-if="mediaDefault === 'File'"
@@ -153,7 +153,8 @@ export default {
       v => !!v || 'The card must have a title'
     ],
     imageUrlRule: [
-      v => !!v || 'The card must have a cover image'
+      v => !!v || 'The card must have a cover image',
+      v => /(http(s?):)([/|.|\w|\s|-])*\.(?:jpeg|jpg|gif|png)/.test(v) || 'the url must have containt and image'
     ],
     actionText: [
       v => !!v || 'The action must have a description'
@@ -179,6 +180,9 @@ export default {
         this.card.imgUrl = value
         this.card.imgDefaultUrl = ''
       }
+    },
+    mediaDefault () {
+      this.card.imgUrl = ''
     }
   },
   methods: {
@@ -190,6 +194,7 @@ export default {
     },
     onFilePicked (e) {
       const files = e.target.files
+      console.log(files)
       if (files[0] !== undefined) {
         this.imageFile.imageName = files[0].name
         if (this.imageFile.imageName.lastIndexOf('.') <= 0) {
@@ -203,7 +208,7 @@ export default {
           this.imageFile.imageFile = files[0] // this is an image file that can be sent to server...
         })
       } else {
-        this.imageFile.imageName = ''
+        this.card.imgUrl = ''
         this.imageFile.imageFile = ''
         this.imageFile.imageUrl = ''
       }
