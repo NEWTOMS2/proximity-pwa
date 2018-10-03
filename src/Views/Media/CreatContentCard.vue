@@ -7,10 +7,10 @@
                     <v-checkbox label="Enable/Disable Card Content Image" v-model="card.showCardImage" hide-details class="shrink mr-2"></v-checkbox>
                     <v-layout>
                         <v-flex xs10>
-                            <v-text-field v-if="mediaDefault === 'Url'" :rules="imageUrlRule" v-model="card.imgUrl" label="Card Content Image" required @click:append="upload()"></v-text-field>
-                            <v-text-field v-if="mediaDefault === 'File'" label="Select Image" @click='pickFile' v-model='imageFile.imageName' prepend-icon='attach_file'></v-text-field>
+                            <v-text-field v-if="card.imageSourceType === 'Url'" :rules="imageUrlRule" v-model="card.imgUrl" label="Card Content Image" required @click:append="upload()"></v-text-field>
+                            <v-text-field v-if="card.imageSourceType === 'File'" label="Select Image" @click='pickFile' v-model='imageFile.imageName' prepend-icon='attach_file'></v-text-field>
 					<input
-                        v-if="mediaDefault === 'File'"
+                        v-if="card.imageSourceType === 'File'"
 						type="file"
 						style="display: none"
 						ref="image"
@@ -19,7 +19,7 @@
 					>
                         </v-flex>
                         <v-flex xs2>
-                            <v-select :items="mediaImageSources" v-model="mediaDefault" label="From" class="px-2"></v-select>
+                            <v-select :items="mediaImageSources" v-model="card.imageSourceType" label="From" class="px-2"></v-select>
                         </v-flex>
                     </v-layout>
                     <v-btn @click="changeImageSize(400)" class="content-sizes" :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl}`">
@@ -40,7 +40,7 @@
                         </v-flex>
                         <v-flex xs5>
                             <v-text-field :rules="actionUrl" v-if="item.actionType === 'Url'" v-model="item.contentUrl" :label="typeAction" required></v-text-field>
-                            <v-select :rules="actionForm" v-else :items="Forms" :label="item.actionType" class="px-2"></v-select>
+                            <v-select :rules="actionForm" v-else item-text="name" item-value="id" v-model="item.contentUrl" :items="Forms" :label="item.actionType" class="px-2"></v-select>
                         </v-flex>
                         <v-flex xs2>
                             <v-select :items="buttonActionType" v-model="item.actionType" label="Type" class="px-2"></v-select>
@@ -71,9 +71,9 @@
                                     </transition>
                                     <transition name="bounce">
                                         <v-card-actions class="card-actions" v-if="card.showCardActions">
-                                            <v-layout>
+                                            <v-layout row class="pb-2">
                                                 <div v-for="item in card.actions.buttons" :key="item">
-                                                    <v-btn flat>{{ item.actionLabel }}</v-btn>
+                                                    <v-btn small round>{{ item.actionLabel }}</v-btn>
                                                 </div>
                                             </v-layout>
                                             <v-layout>
@@ -133,6 +133,7 @@ export default {
       showCardImage: true,
       imgDefaultUrl: require('@/assets/card_default_bg.png'),
       imageSize: '400px',
+      imageSourceType: 'Url',
       htmlContent: '',
       showCardContent: true,
       showCardActions: true,
@@ -167,8 +168,7 @@ export default {
     ],
     buttonActionType: ['Url', 'Form'],
     typeAction: 'Url',
-    Forms: ['Poll - Opt in'],
-    mediaDefault: 'Url',
+    Forms: [{id: 'OPTIN', name: 'Poll - Opt in'}],
     mediaImageSources: ['Url', 'File']
 
   }),
@@ -181,7 +181,7 @@ export default {
         this.card.imgDefaultUrl = ''
       }
     },
-    mediaDefault () {
+    'card.imageSourceType' () {
       this.card.imgUrl = ''
     }
   },

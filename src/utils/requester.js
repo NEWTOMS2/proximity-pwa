@@ -7,7 +7,7 @@ const services = Axios.create({
   // baseURL: 'http://localhost:3000',
   // baseURL: process.env.ROOT_API,
   headers: {
-    'crossDomain': true
+    'crossDomain': false
   }
   // headers: {'X-Custom-Header': 'foobar'}
 })
