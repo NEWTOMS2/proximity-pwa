@@ -70,7 +70,7 @@ export default new Router({
       path: '',
       name: '',
       component: Main,
-      meta: {title: 'Media Content', model: true, prependIcon: 'equalizer', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Client', 'Administrator']},
+      meta: {title: 'Analytics', model: true, prependIcon: 'equalizer', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Client', 'Administrator']},
       children: [
         { path: '/app/analytics/targets', component: Targets, meta: {title: 'Reached Targets', icon: 'center_focus_weak', group: ''} }
       ]
