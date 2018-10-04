@@ -2,18 +2,23 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Landing from '@/Views/Landing'
 import Main from '@/Views/Main'
+
 import Beacons from '@/Views/Client/Beacons'
 import BeaconTypes from '@/Views/Client/BeaconTypes'
 import BeaconHierarchy from '@/Views/Client/BeaconHierarchy'
 import BeaconPlaceHierarchy from '@/Views/Client/BeaconPlaceHierarchy'
 import Places from '@/Views/Client/Places'
+
+import Users from '@/Views/Master/Users'
+import Roles from '@/Views/Master/Roles'
+import Organizations from '@/Views/Master/Organizations'
+
 import ContentCards from '@/Views/Media/ContentCards'
 import CreatContentCard from '@/Views/Media/CreatContentCard'
 import UpdateContentCard from '@/Views/Media/UpdateContentCard'
 import MediaContentCard from '@/Views/Media/Content/MediaContentCard'
-import Users from '@/Views/Master/Users'
-import Roles from '@/Views/Master/Roles'
-import Organizations from '@/Views/Master/Organizations'
+
+import Targets from '@/Views/Analytics/Targets'
 
 Vue.use(Router)
 
@@ -59,6 +64,15 @@ export default new Router({
         { path: '/app/contentcards', component: ContentCards, meta: {title: 'Content Cards', icon: 'art_track', group: ''} },
         { path: '/app/new_content_card', component: CreatContentCard, meta: {title: 'New Content Card', icon: 'art_track', group: ''} },
         { path: '/app/update_content_card', component: UpdateContentCard, meta: {title: 'Update Content Card', icon: 'art_track', group: ''} }
+      ]
+    },
+    {
+      path: '',
+      name: '',
+      component: Main,
+      meta: {title: 'Media Content', model: true, prependIcon: 'equalizer', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Client', 'Administrator']},
+      children: [
+        { path: '/app/analytics/targets', component: Targets, meta: {title: 'Reached Targets', icon: 'center_focus_weak', group: ''} }
       ]
     },
     {

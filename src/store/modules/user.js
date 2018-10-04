@@ -1,5 +1,5 @@
-import { userAccess } from '@/api/users'
-// import { hasPassword } from '@/utils/encryptor'
+import { userAccess, userInfo } from '@/api/users'
+import { setToken, getToken } from '@/utils/auth'
 import router from '@/router'
 const state = {
   info: {
@@ -44,8 +44,15 @@ const actions = {
           }
         }
       })
+      setToken(result.data.id)
       commit('SAVE_USER_DATA', result.data)
       commit('PERMITTED_ROUTES', routes)
+    })
+  },
+  fetchLoggedUser ({ commit }) {
+    userInfo(getToken()).then(result => {
+      setToken(result.data.id)
+      commit('SAVE_USER_DATA', result.data)
     })
   },
   logInOut ({ commit }) {

@@ -49,7 +49,7 @@
                 </template>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar app absolute clipped-left>
+        <v-toolbar fixed app clipped-left>
             <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
             <span class="title ml-3 mr-5">NEWTOMS&nbsp;<span class="font-weight-light">Proximity Marketing Agency (NPMA)</span></span>
             <!-- <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field> -->
