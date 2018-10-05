@@ -31,6 +31,8 @@
                 <td>{{ props.item.targetName }}</td>
                 <td>{{ props.item.targetEmail }}</td>
                 <td>{{ props.item.targetPhone }}</td>
+                <td>{{ props.item.contenCard }}</td>
+                <td>{{ props.item.organization }}</td>
                 <td>{{ props.item.dateReached }}</td>
                 <!-- <td class="justify-center layout px-0">
                     <v-icon small class="mr-2" @click="editBeaconType(props.item)">
@@ -60,6 +62,8 @@ export default {
       { text: 'Fullname', value: 'targetName' },
       { text: 'E-mail', value: 'targetEmail' },
       { text: 'Phone Number', value: 'targetPhone' },
+      { text: 'Content Card', value: 'contenCard' },
+      { text: 'Organization', value: 'organization' },
       { text: 'Reached Date', value: 'dateReached' }
     ],
     targets: [],
@@ -95,6 +99,7 @@ export default {
       this.isFetching = true
       fetchTargetsByOrganization().then(response => {
         this.targets = response.data
+        console.table([this.targets])
         this.isFetching = false
       })
     },
