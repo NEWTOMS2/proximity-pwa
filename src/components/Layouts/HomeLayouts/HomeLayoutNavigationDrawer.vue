@@ -1,6 +1,28 @@
 <template>
     <div class="drawer">
-        <v-navigation-drawer :clipped="$vuetify.breakpoint.lgAndUp" v-model="drawer" fixed app>
+        <v-navigation-drawer :mini-variant.sync="mini" :clipped="$vuetify.breakpoint.lgAndUp" v-model="drawer" fixed app>
+                <v-toolbar flat class="transparent">
+      <v-list class="pa-0">
+        <v-list-tile avatar>
+          <v-list-tile-avatar>
+            <v-icon>dashboard</v-icon>
+          </v-list-tile-avatar>
+
+          <v-list-tile-content>
+            <v-list-tile-title>Dashboard</v-list-tile-title>
+          </v-list-tile-content>
+
+          <v-list-tile-action>
+            <v-btn
+              icon
+              @click.stop="mini = !mini"
+            >
+              <v-icon>chevron_left</v-icon>
+            </v-btn>
+          </v-list-tile-action>
+        </v-list-tile>
+      </v-list>
+    </v-toolbar>
             <v-list>
                 <template v-for="item in routes">
                     <v-layout v-if="item.heading" :key="item.heading" row align-center>
@@ -8,9 +30,6 @@
                             <v-subheader v-if="item.heading">
                                 {{ item.heading  }}
                             </v-subheader>
-                        </v-flex>
-                        <v-flex xs6 class="text-xs-center">
-                            <a href="#!" class="body-2 black--text">EDIT</a>
                         </v-flex>
                     </v-layout>
                     <v-list-group popout v-else-if="item.children" v-model="item.meta.model" :key="item.meta.title" :append-icon="item.model ? item.meta.appendIcon : item.meta.appendIconAlt" :prepend-icon="item.meta.prependIcon">
@@ -23,14 +42,19 @@
                         </v-list-tile>
                         <v-list-tile v-for="(child, i) in item.children" :key="i" @click="">
                         <router-link class="item-drawer-list" :to="child.path">
-                            <v-list-tile-action v-if="child.meta.icon">
-                                <v-icon>{{ child.meta.icon }}</v-icon>
-                            </v-list-tile-action>
-                            <v-list-tile-content>
-                                <v-list-tile-title>
-                                    {{ child.meta.title }}
-                                </v-list-tile-title>
-                            </v-list-tile-content>
+                                <v-list-tile-action v-if="child.meta.icon">
+                                    <v-tooltip right>
+                                        <v-icon 
+                                        slot="activator">
+                                        {{ child.meta.icon }}</v-icon>
+                                        <span>{{ child.meta.title }}</span>
+                                    </v-tooltip>
+                                </v-list-tile-action>
+                                <v-list-tile-content>
+                                    <v-list-tile-title>
+                                        {{ child.meta.title }}
+                                    </v-list-tile-title>
+                                </v-list-tile-content>
                         </router-link>
                         </v-list-tile>
                     </v-list-group>
@@ -65,6 +89,7 @@
 export default {
   data: () => ({
     drawer: null,
+    mini: true,
     items: []
   }),
   mounted () {

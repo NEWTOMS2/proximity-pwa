@@ -34,7 +34,7 @@ export default new Router({
       path: '/app',
       name: 'Landing',
       component: Main,
-      meta: {title: 'Home', icon: 'lightbulb_outline', roles: ['Client', 'Administrator', 'Master', 'Moderator']}
+      meta: {title: 'Home', icon: 'home', roles: ['Client', 'Administrator', 'Master', 'Moderator']}
     },
     {
       path: '/media/content/:id/:idOrganization',

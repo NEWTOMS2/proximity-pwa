@@ -22,10 +22,15 @@
                             <v-select :items="mediaImageSources" v-model="card.imageSourceType" label="From" class="px-2"></v-select>
                         </v-flex>
                     </v-layout>
-                    <v-btn @click="changeImageSize(400)" class="content-sizes" :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl}`">
-                        400px
-                    </v-btn>
-                    <v-btn @click="changeImageSize(600)" class="content-sizes" :style="`background: url(${card.imgUrl === '' ? card.imgDefaultUrl : card.imgUrl}`">600px</v-btn>
+                    <v-slider
+                    append-icon="zoom_in"
+                    prepend-icon="zoom_out"
+                    min="200"
+                    max="400"
+                    :thumb-size="24"
+                    thumb-label="always"
+                    v-model="slider"
+                    ></v-slider>
                     <v-checkbox label="Enable/Disable Card Content" v-model="card.showCardContent" hide-details class="shrink mr-2 mb-3"></v-checkbox>
                     <wysiwyg v-model="card.htmlContent" />
                     <v-layout align-center>
@@ -48,9 +53,10 @@
                     </v-layout>
                     <v-checkbox label="Show/Checkbox Whatsapp Notification" v-model="card.actions.showCheckBoxWhatsappNotification" hide-details class="shrink mr-2 mt-0"></v-checkbox>
                     <v-checkbox label="Show/Checkbox App Notification" v-model="card.actions.showCheckBoxAppNotification" hide-details class="shrink mr-2 mt-0"></v-checkbox>
-                    <v-layout>
-                        <v-btn large  @click="saveContentCard()">Save</v-btn>
-                        <v-btn large  @click="saveContentCard()">Reset</v-btn>
+                    <v-layout row class="flex">
+                        <v-btn :disabled="isRequestOnProgress" v-if="!cloneCard" class="is-flex" large @click="saveContentCard()">Save</v-btn>
+                        <v-btn v-else class="is-flex" large @click="cloneContentCard()">Clone</v-btn>
+                        <v-btn class="is-flex" large @click="saveContentCard()">Clear</v-btn>
                     </v-layout>
                 </v-form>
             </v-flex>
@@ -114,9 +120,13 @@
 import { creatContentCard } from '@/api/content_cards'
 export default {
   data: () => ({
+    slider: '400',
     templateClass: 'base',
+    clonedNumner: 1,
     input: '',
+    cloneCard: false,
     isActionEnable: false,
+    isRequestOnProgress: false,
     isRemoveActionVisible: false,
     message: {
       show: false,
@@ -173,6 +183,9 @@ export default {
 
   }),
   watch: {
+    slider (value) {
+      this.card.imageSize = `${value}px`
+    },
     'card.imgUrl' (value) {
       if (value === '') {
         this.card.imgDefaultUrl = require('@/assets/card_default_bg.png')
@@ -186,9 +199,6 @@ export default {
     }
   },
   methods: {
-    changeImageSize (sizes) {
-      this.card.imageSize = `${sizes}px`
-    },
     pickFile () {
       this.$refs.image.click()
     },
@@ -228,9 +238,12 @@ export default {
     },
     saveContentCard () {
       if (this.$refs.form.validate()) {
+        this.isRequestOnProgress = true
         creatContentCard(this.card).then(response => {
           console.log(response)
+          this.isRequestOnProgress = false
           this.message.show = true
+          this.cloneCard = true
           this.message.text = response.data.text
         })
         console.log('valid')
@@ -240,6 +253,11 @@ export default {
     },
     removeActions () {
       this.card.actions.buttons.pop()
+    },
+    cloneContentCard () {
+      this.card.title = `${this.card.title} ~ Copy0${this.clonedNumner}`
+      this.clonedNumner++
+      this.cloneCard = false
     }
   }
 }
