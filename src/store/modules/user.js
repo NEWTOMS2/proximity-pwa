@@ -1,5 +1,5 @@
 import { userAccess, userInfo } from '@/api/users'
-import { setToken, getToken } from '@/utils/auth'
+import { setToken, getToken, removeToken } from '@/utils/auth'
 import router from '@/router'
 const state = {
   info: {
@@ -34,32 +34,49 @@ const mutations = {
 
 const actions = {
   userLogIn ({ commit }, data) {
-    // data.password = hasPassword(data.password)
-    userAccess(data).then((result) => {
-      let routes = []
-      router.options.routes.forEach((element, index) => {
-        if (index > 0 && element.meta.noRender !== true) {
-          if (element.meta.roles.includes(result.data.role)) {
-            routes.push(element)
+    return new Promise((resolve, reject) => {
+      userAccess(data).then((result) => {
+        let routes = []
+        router.options.routes.forEach((element, index) => {
+          if (index > 0 && element.meta.noRender !== true) {
+            if (element.meta.roles.includes(result.data.role)) {
+              routes.push(element)
+            }
           }
-        }
+        })
+        setToken(result.data.id)
+        commit('SAVE_USER_DATA', result.data)
+        commit('PERMITTED_ROUTES', routes)
+        resolve()
       })
-      setToken(result.data.id)
-      commit('SAVE_USER_DATA', result.data)
-      commit('PERMITTED_ROUTES', routes)
     })
   },
   fetchLoggedUser ({ commit }) {
-    userInfo(getToken()).then(result => {
-      setToken(result.data.id)
-      commit('SAVE_USER_DATA', result.data)
+    return new Promise((resolve, reject) => {
+      userInfo(getToken()).then(result => {
+        let routes = []
+        router.options.routes.forEach((element, index) => {
+          if (index > 0 && element.meta.noRender !== true) {
+            if (element.meta.roles.includes(result.data.role)) {
+              routes.push(element)
+            }
+          }
+        })
+        setToken(result.data.id)
+        commit('PERMITTED_ROUTES', routes)
+        commit('SAVE_USER_DATA', result.data)
+        resolve(routes)
+      })
     })
   },
-  logInOut ({ commit }) {
+  logOut ({ commit }) {
     return new Promise((resolve, reject) => {
-      commit('USER_LOGGED')
+      removeToken()
       resolve()
     })
+  },
+  removeUserData ({ commit }) {
+    commit('REMOVE_USER_DATA')
   }
 }
 

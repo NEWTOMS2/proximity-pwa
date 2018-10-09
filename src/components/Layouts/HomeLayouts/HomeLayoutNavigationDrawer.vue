@@ -92,12 +92,6 @@ export default {
     mini: true,
     items: []
   }),
-  mounted () {
-    this.configRoutes()
-  },
-  created () {
-    // this.configRoutes()
-  },
   computed: {
     userInfo () {
       return this.$store.state.user.info
@@ -108,8 +102,8 @@ export default {
   },
   methods: {
     onSubmit () {
-      this.$store.dispatch('logInOut').then(() => {
-        this.$router.push({path: '/', replace: true})
+      this.$store.dispatch('logOut').then(() => {
+        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
       })
     }
   },

@@ -25,8 +25,8 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'Landing',
+      path: '/access',
+      name: 'Access',
       component: Landing,
       meta: {noRender: true}
     },
@@ -40,10 +40,10 @@ export default new Router({
       path: '/media/content/:id/:idOrganization',
       name: 'Media Content',
       component: MediaContentCard,
-      meta: {noRender: true}
+      meta: {noRender: true, requiredAuth: false}
     },
     {
-      path: '',
+      path: '/app/beacons',
       name: 'Beacons',
       component: Main,
       meta: {title: 'Beacons', model: true, prependIcon: 'adjust', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Client', 'Administrator']},
@@ -56,19 +56,19 @@ export default new Router({
       ]
     },
     {
-      path: '',
+      path: '/app/media',
       name: 'Media',
       component: Main,
       meta: {title: 'Media Content', model: true, prependIcon: 'perm_media', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Client', 'Administrator', 'Moderator']},
       children: [
-        { path: '/app/contentcards', component: ContentCards, meta: {title: 'Content Cards', icon: 'art_track', group: ''} },
-        { path: '/app/new_content_card', component: CreatContentCard, meta: {title: 'New Content Card', icon: 'art_track', group: ''} },
-        { path: '/app/update_content_card', component: UpdateContentCard, meta: {title: 'Update Content Card', icon: 'art_track', group: ''} }
+        { path: '/app/media/contentcards', component: ContentCards, meta: {title: 'Content Cards', icon: 'art_track', group: ''} },
+        { path: '/app/media/new_content_card', component: CreatContentCard, meta: {title: 'New Content Card', icon: 'art_track', group: ''} },
+        { path: '/app/media/update_content_card', component: UpdateContentCard, meta: {title: 'Update Content Card', icon: 'art_track', group: ''} }
       ]
     },
     {
-      path: '',
-      name: '',
+      path: '/app/analytics',
+      name: 'Analytics',
       component: Main,
       meta: {title: 'Analytics', model: true, prependIcon: 'equalizer', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Client', 'Administrator']},
       children: [
@@ -76,7 +76,7 @@ export default new Router({
       ]
     },
     {
-      path: '',
+      path: '/app/master',
       name: 'Master',
       component: Main,
       meta: {title: 'Administration', model: true, prependIcon: 'settings', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Master', 'Administrator']},

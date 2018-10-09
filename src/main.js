@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+
 import ElementUI from 'element-ui'
 import Vuetify from 'vuetify'
 import VueVideoPlayer from 'vue-video-player'
@@ -14,7 +15,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css'
 import 'vue-wysiwyg/dist/vueWysiwyg.css'
 import 'html5-device-mockups/dist/device-mockups.min.css'
-
+import './permision'
 Vue.use(ElementUI)
 Vue.use(Vuetify)
 Vue.use(wysiwyg, {})
