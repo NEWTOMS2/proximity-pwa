@@ -7239,6 +7239,10 @@ stream-shift@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.0.tgz#d5c752825e5367e786f78e18e445ea223a155952"
 
+strftime@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/strftime/-/strftime-0.10.0.tgz#b3f0fa419295202a5a289f6d6be9f4909a617193"
+
 strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
@@ -8008,6 +8012,10 @@ vuedraggable@^2.16.0:
   resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.16.0.tgz#52127081a2adb3de5fabd214d404ff3eee63575a"
   dependencies:
     sortablejs "^1.7.0"
+
+vuetify-google-autocomplete@^2.0.0-beta.5:
+  version "2.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/vuetify-google-autocomplete/-/vuetify-google-autocomplete-2.0.0-beta.5.tgz#4a0e60f179382caa677c805e1d07bc5705edd81e"
 
 vuetify@^1.0.0:
   version "1.1.13"

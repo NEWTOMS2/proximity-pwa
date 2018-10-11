@@ -4,7 +4,7 @@
             <v-toolbar-title class="elegant__title"><img style="width: 25%;" src="@/assets/beacon.png" alt="" srcset=""><h3>Beacon Types</h3></v-toolbar-title>
             <v-spacer></v-spacer>
             <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
-            <v-dialog v-model="dialog" max-width="500px">
+            <!-- <v-dialog v-model="dialog" max-width="500px">
                 <v-card>
                     <v-card-title :class="formTitleColor">
                         <span class="white-letter display-1">{{ formTitle }}</span>
@@ -24,7 +24,7 @@
                         <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
                     </v-card-actions>
                 </v-card>
-            </v-dialog>
+            </v-dialog> -->
         </v-toolbar>
         <v-data-table :loading="isFetching" :headers="headers" :items="targets" hide-actions :search="search">
             <template slot="items" slot-scope="props">
@@ -33,7 +33,7 @@
                 <td>{{ props.item.targetPhone }}</td>
                 <td>{{ props.item.contenCard }}</td>
                 <td>{{ props.item.organization }}</td>
-                <td>{{ props.item.dateReached }}</td>
+                <td>{{ formatDate(props.item.dateReached) }}</td>
                 <!-- <td class="justify-center layout px-0">
                     <v-icon small class="mr-2" @click="editBeaconType(props.item)">
                         edit
@@ -52,6 +52,7 @@
 import {
   fetchTargetsByOrganization
 } from '@/api/users'
+import strftime from 'strftime'
 export default {
   data: () => ({
     search: '',
@@ -110,8 +111,8 @@ export default {
         this.editedIndex = -1
       }, 300)
     },
-    cleanData () {
-      Object.keys(this.editedBeaconType).forEach(key => { this.editedBeaconType[key] = null })
+    formatDate (date) {
+      return strftime('%B %d, %Y %H:%M:%S', new Date(date))
     }
   }
 }

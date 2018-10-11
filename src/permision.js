@@ -12,11 +12,14 @@ NProgress.configure({
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  if (getToken()) {
+  if (getToken() || getToken() !== undefined) {
     store.dispatch('fetchLoggedUser').then(() => {
       next({replace: true})
       NProgress.done()
     })
+    if (to.path === '/') {
+      next('/app')
+    }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
       next()
@@ -27,7 +30,11 @@ router.beforeEach((to, from, next) => {
         NProgress.done()
       } else {
         store.dispatch('removeUserData')
-        next('/access')
+        if (to.path === '/') {
+          next('/access')
+        } else {
+          next('/access')
+        }
         NProgress.done()
       }
     }
