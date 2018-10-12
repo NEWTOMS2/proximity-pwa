@@ -38,3 +38,11 @@ export function updatePlace (id, data) {
     data
   })
 }
+
+export function deletePlace (id) {
+  return request({
+    baseURL: baseApiUrl,
+    url: `${store.state.user.info.idOrganization}/places/${id}`,
+    method: 'delete'
+  })
+}

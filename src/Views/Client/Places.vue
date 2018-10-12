@@ -16,9 +16,13 @@
                                 <v-form class="full-weight" v-model="valid">
                                     <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedPlace.name" label="Place"></v-text-field>
                                     <gmap-autocomplete
+                                        ref="autocomplete"
                                         class="v-button-autocomplete form-control"
-                                        @place_changed="setPlace">
+                                        @place_changed="setPlace"
+                                        types="(cities)"
+                                        >
                                     </gmap-autocomplete>
+                                    <v-text-field v-if="editedIndex !== -1" :loading="isFetchingItem" :disabled="true" v-model="editedPlace.address" label="Current Address"></v-text-field>
                                     <v-text-field :loading="isFetchingItem" :disabled="true" v-model="editedPlace.lat" label="Latitude"></v-text-field>
                                     <v-text-field :loading="isFetchingItem" :disabled="true" v-model="editedPlace.lng" label="Longitude"></v-text-field>
                                 </v-form>
@@ -26,15 +30,11 @@
                                   :center="center"
                                   :zoom="zoom"
                                   map-type-id="roadmap"
-                                  style="width: 100vw; height: 40vh"
+                                  style="width: 100vw; height: 35vh"
                                 > 
                                   <Gmap-Marker
-                                    v-if="this.currentPlace"
                                     :label="label"
-                                    :position="{
-                                          lat: this.currentPlace.geometry.location.lat(),
-                                          lng: this.currentPlace.geometry.location.lng(),
-                                        }"
+                                    :position="center"
                                     @click="center=m.position" 
                                     :icon="{ url: require('@/assets/beacon_place.svg')}"
                                     ></Gmap-Marker>
@@ -52,11 +52,14 @@
         </v-toolbar>
         <v-data-table :loading="isFetching" :headers="headers" :items="places" hide-actions :search="search">
             <template slot="items" slot-scope="props">
-                <td>{{ props.item.id }}</td>
                 <td>{{ props.item.name }}</td>
+                <td>{{ props.item.address }}</td>
                 <td class="justify-center layout px-0">
                     <v-icon small class="mr-2" @click="editPlace(props.item)">
                         edit
+                    </v-icon>
+                    <v-icon small class="mr-2" @click="deletePlace(props.item)">
+                        delete
                     </v-icon>
                 </td>
             </template>
@@ -73,7 +76,8 @@ import {
   fetchAllPlaces,
   fetchPlaceById,
   creatPlace,
-  updatePlace
+  updatePlace,
+  deletePlace
 } from '@/api/places'
 export default {
   data: () => ({
@@ -83,8 +87,8 @@ export default {
     isFetchingItem: false,
     apiKey: 'AIzaSyBNHF0Df-A0QANcNhhxSUs9etFvqsV6FuE',
     headers: [
-      { text: 'Id', value: 'id', width: '50px' },
-      { text: 'Name', value: 'name' },
+      { text: 'Name', value: 'name', width: '250px' },
+      { text: 'Address', value: 'address' },
       { text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px' }
     ],
     places: [],
@@ -135,9 +139,11 @@ export default {
     },
     // receives a place object via the autocomplete component
     setPlace (place) {
+      console.log(place)
       this.zoom = 20
       this.markers = {}
       this.currentPlace = place
+      this.editedPlace.address = place.formatted_address
       this.editedPlace.lat = this.currentPlace.geometry.location.lat()
       this.editedPlace.lng = this.currentPlace.geometry.location.lng()
       const marker = {
@@ -147,7 +153,7 @@ export default {
       this.center = marker
       this.marker = { position: marker }
     },
-    addMarker () {
+    /* addMarker () {
       if (this.currentPlace) {
         const marker = {
           lat: this.currentPlace.geometry.location.lat(),
@@ -158,7 +164,7 @@ export default {
         this.center = marker
         this.currentPlace = null
       }
-    },
+    }, */
     geolocate: function () {
       navigator.geolocation.getCurrentPosition(position => {
         this.center = {
@@ -171,13 +177,24 @@ export default {
       this.cleanData()
       this.isFetchingItem = true
       fetchPlaceById(item.id).then(response => {
+        this.markers = {}
+        this.zoom = 20
         this.editedPlace = Object.assign({}, response.data)
+        let position = this.getPosition(this.editedPlace)
+        this.center = position
+        this.marker = { position: position }
         this.isFetchingItem = false
       })
       this.editedIndex = this.places.indexOf(item)
       this.dialog = true
     },
-
+    getPosition (data) {
+      var marker = {
+        lat: parseFloat(data.lat),
+        lng: parseFloat(data.lng)
+      }
+      return marker
+    },
     /* deletePlace (item) {
       const index = this.desserts.indexOf(item)
       confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
@@ -191,6 +208,8 @@ export default {
       }, 300)
     },
     save () {
+      this.editedPlace.lat = this.editedPlace.lat.toString()
+      this.editedPlace.lng = this.editedPlace.lng.toString()
       if (this.editedIndex > -1) {
         Object.assign(this.places[this.editedIndex], this.editedPlace)
         updatePlace(this.editedPlace.id, this.editedPlace).then(response => {
@@ -206,6 +225,14 @@ export default {
         })
       }
       this.close()
+    },
+    deletePlace (item) {
+      confirm('Are you sure you want to delete this item?')
+      deletePlace(item.id).then(response => {
+        console.log(response)
+      }).then(() => {
+        this.getData()
+      })
     },
     getAddressData: function (addressData, placeResultData, id) {
       this.editedPlace.address = addressData
