@@ -37,12 +37,12 @@
         scrollable
       >
         <v-card tile>
-          <v-toolbar card color="green accent-3">
+          <v-toolbar card class="ligth-teal">
             <v-spacer></v-spacer>
-            <v-toolbar-title>Keep in touch</v-toolbar-title>
+            <v-toolbar-title >Keep in touch</v-toolbar-title>
           </v-toolbar>
-            <v-layout justify-center column fill-height>
-            <img src="@/assets/Newtoms.png" alt="" srcset="" style="width: 75%; margin: auto;">
+            <v-layout class="base-dark" justify-center column fill-height>
+            <img src="@/assets/logo_dark.jpg" alt="" srcset="" style="width: 50%; margin: auto;">
                 <div style="text-align: center;" v-if="reachedSucces">
                     <h1>
                         Thank you!!
@@ -51,8 +51,9 @@
                         will be in touch as soon as we can, have a nice day.
                     </p>
                 </div>
-                <v-form class="form-format" ref="form" v-model="valid" lazy-validation>
-                    <v-text-field 
+                <v-form dark class="form-format" ref="form" v-model="valid" lazy-validation>
+                    <v-text-field
+                    dark
                     v-if="!reachedSucces"
                     v-model="targetUser.name"
                     :rules="nameRules"
@@ -60,6 +61,7 @@
                     required
                     ></v-text-field>
                     <v-text-field
+                    dark
                     v-if="!reachedSucces"
                     v-model="targetUser.email"
                     :rules="emailRules"
@@ -67,6 +69,7 @@
                     required
                     ></v-text-field>
                     <v-text-field
+                    dark
                     v-if="!reachedSucces"
                     mask="phone"
                     v-model="targetUser.phone"
@@ -163,6 +166,9 @@ export default
 </script>
 
 <style>
+.base-dark {
+  background: #3b444d;
+}
 .form-format {
     width: 75vw;
     margin: auto;
@@ -171,5 +177,8 @@ export default
 .card-actions {
     flex-flow: column;
     display: flex;    
+}
+.ligth-teal {
+  background: #01f3ff;
 }
 </style>

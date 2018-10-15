@@ -1,6 +1,6 @@
 <template>
     <v-layout row wrap>
-        <v-flex xs12 sm12 lg4 xl4>
+        <v-flex side-login xs12 sm12 lg4 xl4>
             <landing-layout-access-form/>
         </v-flex>
         <v-flex class="hidden-sm-and-down" xs8 lg8 xl8>
@@ -27,6 +27,9 @@ export default {
 </script>
 
 <style>
+.side-login {
+  background: #3b444d;
+}
 .v-carousel {
   height: inherit!important;
 }
