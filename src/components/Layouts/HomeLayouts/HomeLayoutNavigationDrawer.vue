@@ -73,8 +73,9 @@
                 </template>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar fixed app clipped-left>
+        <v-toolbar dark class="dark-pro" fixed app clipped-left>
             <v-toolbar-side-icon @click.native="drawer = !drawer"></v-toolbar-side-icon>
+            <img src="@/assets/proximity semi circulo_pequeno.png" class="toolbar-logo">
             <span class="title ml-3 mr-5">NEWTOMS&nbsp;<span class="font-weight-light">Proximity Marketing Agency (NPMA)</span></span>
             <!-- <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field> -->
             <v-spacer></v-spacer>
@@ -117,5 +118,11 @@ export default {
 .item-drawer-list {
     display: flex;
     text-decoration: none;
+}
+.dark-pro {
+ background: #3b444d!important;
+}
+.toolbar-logo {
+    width: 32px;
 }
 </style>
