@@ -13,16 +13,23 @@
                     <v-card-text>
                         <v-container grid-list-md>
                             <v-layout wrap>
-                                <v-flex xs12 sm12 md12>
-                                    <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedBeaconHierarchy.name" label="BeaconHierarchy"></v-text-field>
-                                </v-flex>
+                                <v-form class="full-weight" v-model="valid">
+                                    <v-text-field
+                                    :rules="nameRule" 
+                                    required 
+                                    :loading="isFetchingItem" 
+                                    :disabled="isFetchingItem" 
+                                    v-model="editedBeaconHierarchy.name" 
+                                    label="Name">
+                                    </v-text-field>
+                                </v-form>
                             </v-layout>
                         </v-container>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-                        <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+                        <v-btn :disabled="!valid" color="blue darken-1" flat @click.native="save">Save</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -55,6 +62,7 @@ import {
 export default {
   data: () => ({
     search: '',
+    valid: true,
     dialog: false,
     isFetching: false,
     isFetchingItem: false,
@@ -62,6 +70,9 @@ export default {
       { text: 'Id', value: 'id', width: '50px' },
       { text: 'Name', value: 'name' },
       { text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px' }
+    ],
+    nameRule: [
+      v => !!v || 'the name is required'
     ],
     places: [],
     editedIndex: -1,
@@ -125,21 +136,23 @@ export default {
     },
 
     save () {
-      if (this.editedIndex > -1) {
-        Object.assign(this.places[this.editedIndex], this.editedBeaconHierarchy)
-        updateBeaconHierarchy(this.editedBeaconHierarchy.id, this.editedBeaconHierarchy).then(response => {
-          console.log(response)
-        }).then(() => {
-          this.getData()
-        })
-      } else {
-        creatBeaconHierarchy(this.editedBeaconHierarchy).then(response => {
-          console.log(response)
-        }).then(() => {
-          this.getData()
-        })
+      if (this.$refs.form.validate()) {
+        if (this.editedIndex > -1) {
+          Object.assign(this.places[this.editedIndex], this.editedBeaconHierarchy)
+          updateBeaconHierarchy(this.editedBeaconHierarchy.id, this.editedBeaconHierarchy).then(response => {
+            console.log(response)
+          }).then(() => {
+            this.getData()
+          })
+        } else {
+          creatBeaconHierarchy(this.editedBeaconHierarchy).then(response => {
+            console.log(response)
+          }).then(() => {
+            this.getData()
+          })
+        }
+        this.close()
       }
-      this.close()
     },
     newBeaconHierarchy () {
       this.cleanData()

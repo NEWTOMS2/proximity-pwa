@@ -21,11 +21,9 @@ const state = {
 const mutations = {
   SAVE_USER_DATA (state, data) {
     state.info = Object.assign({}, data)
-    console.log(state.info)
   },
   PERMITTED_ROUTES (state, data) {
     state.availableRoutes = data
-    console.log(state.availableRoutes)
   },
   REMOVE_USER_DATA (state) {
     state.info = {}
@@ -36,18 +34,27 @@ const actions = {
   userLogIn ({ commit }, data) {
     return new Promise((resolve, reject) => {
       userAccess(data).then((result) => {
-        let routes = []
-        router.options.routes.forEach((element, index) => {
-          if (index > 0 && element.meta.noRender !== true) {
-            if (element.meta.roles.includes(result.data.role)) {
-              routes.push(element)
+        console.log(result.data)
+        if (result.data !== '') {
+          let routes = []
+          router.options.routes.forEach((element, index) => {
+            if (index > 0 && element.meta.noRender !== true) {
+              if (element.meta.roles.includes(result.data.role)) {
+                routes.push(element)
+              }
             }
-          }
-        })
-        setToken(result.data.id)
-        commit('SAVE_USER_DATA', result.data)
-        commit('PERMITTED_ROUTES', routes)
-        resolve()
+          })
+          setToken(result.data.id)
+          commit('PERMITTED_ROUTES', routes)
+          commit('SAVE_USER_DATA', result.data)
+          resolve()
+        } else {
+          throw new Error('Username or password are wrong')
+        }
+      }).catch(error => {
+        console.log(error)
+        let msg = 'Username or password are wrong'
+        reject(msg)
       })
     })
   },
@@ -66,6 +73,8 @@ const actions = {
         commit('PERMITTED_ROUTES', routes)
         commit('SAVE_USER_DATA', result.data)
         resolve(routes)
+      }).catch(error => {
+        reject(error)
       })
     })
   },

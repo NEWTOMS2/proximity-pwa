@@ -14,14 +14,68 @@
                     <v-card-text>
                         <v-container grid-list-md>
                             <v-layout wrap>
-                                <v-form class="full-weight" v-model="valid">
-                                    <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedItem.user_name" label="Username"></v-text-field>
-                                    <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedItem.first_name" label="Firstname"></v-text-field>
-                                    <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedItem.last_name" label="Lastname"></v-text-field>
-                                    <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedItem.email" label="Email"></v-text-field>
-                                    <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedItem.password" label="Password"></v-text-field>
-                                    <v-select :loading="isFetchingItem" :disabled="isFetchingItem" :items="organizations" item-text="name" item-value="id" v-model="editedItem.id_organization" label="Organization"></v-select>
-                                    <v-select :loading="isFetchingItem" :disabled="isFetchingItem" :items="roles" item-text="name" item-value="id" v-model="editedItem.id_role" label="Role"></v-select>
+                                <v-form class="full-weight" ref="form" v-model="valid" lazy-validation>
+                                    <v-text-field 
+                                    :rules="usernameRule"
+                                    required
+                                    :loading="isFetchingItem" 
+                                    :disabled="isFetchingItem" 
+                                    v-model="editedItem.user_name" 
+                                    label="Username">
+                                    </v-text-field>
+                                    <v-text-field 
+                                    :rules="firstnameRule"
+                                    required
+                                    :loading="isFetchingItem" 
+                                    :disabled="isFetchingItem" 
+                                    v-model="editedItem.first_name" 
+                                    label="Firstname">
+                                    </v-text-field>
+                                    <v-text-field 
+                                    :rules="lastnameRule"
+                                    required
+                                    :loading="isFetchingItem" 
+                                    :disabled="isFetchingItem" 
+                                    v-model="editedItem.last_name" 
+                                    label="Lastname">
+                                    </v-text-field>
+                                    <v-text-field 
+                                    :rules="emailRule"
+                                    required
+                                    :loading="isFetchingItem" 
+                                    :disabled="isFetchingItem" 
+                                    v-model="editedItem.email" 
+                                    label="Email">
+                                    </v-text-field>
+                                    <v-text-field 
+                                    :rules="passwordRule"
+                                    required
+                                    :loading="isFetchingItem" 
+                                    :disabled="isFetchingItem" 
+                                    v-model="editedItem.password" 
+                                    label="Password">
+                                    </v-text-field>
+                                    <v-select 
+                                    :rules="organizationRule"
+                                    required
+                                    :loading="isFetchingItem" 
+                                    :disabled="isFetchingItem" 
+                                    :items="organizations" 
+                                    item-text="name" 
+                                    item-value="id" 
+                                    v-model="editedItem.id_organization" 
+                                    label="Organization">
+                                    </v-select>
+                                    <v-select 
+                                    :rules="roleRule"
+                                    required
+                                    :loading="isFetchingItem" 
+                                    :disabled="isFetchingItem" 
+                                    :items="roles" item-text="name" 
+                                    item-value="id" 
+                                    v-model="editedItem.id_role" 
+                                    label="Role">
+                                    </v-select>
                                 </v-form>
                             </v-layout>
                         </v-container>
@@ -29,7 +83,7 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-                        <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+                        <v-btn :disabled="!valid" color="blue darken-1" flat @click.native="save">Save</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -68,15 +122,37 @@ export default {
   data: () => ({
     search: '',
     repassword: '',
+    valid: true,
     dialog: false,
     isFetching: false,
     isFetchingItem: false,
     headers: [
-      { text: 'Username', value: 'username' },
-      { text: 'Name', value: 'fullname' },
-      { text: 'Organization', value: 'organization' },
-      { text: 'Role', value: 'role' },
-      { text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px' }
+      { text: 'Username', value: 'username', class: ['headline', 'font-weight-regular'] },
+      { text: 'Name', value: 'fullname', class: ['headline', 'font-weight-regular'] },
+      { text: 'Organization', value: 'organization', class: ['headline', 'font-weight-regular'] },
+      { text: 'Role', value: 'role', class: ['headline', 'font-weight-regular'] },
+      { text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px', class: ['headline', 'font-weight-regular'] }
+    ],
+    usernameRule: [
+      v => !!v || 'the username is required'
+    ],
+    firstnameRule: [
+      v => !!v || 'the firstname is required'
+    ],
+    lastnameRule: [
+      v => !!v || 'the lastname is required'
+    ],
+    emailRule: [
+      v => !!v || 'the email is required'
+    ],
+    passwordRule: [
+      v => !!v || 'the password is required'
+    ],
+    roleRule: [
+      v => !!v || 'the role is required'
+    ],
+    organizationRule: [
+      v => !!v || 'the organization is required'
     ],
     users: [],
     roles: [],
@@ -159,28 +235,29 @@ export default {
     },
 
     save () {
-      if (this.editedIndex > -1) {
-        // this.editedItem.password = hasPassword(this.editedItem.password)
-        Object.assign(this.users[this.editedIndex], this.editedItem)
-        updateUser(this.editedItem.id, this.editedItem).then(response => {
-        }).then(() => {
-          this.getData()
-        })
-      } else {
-        // this.editedItem.password = hasPassword(this.editedItem.password)
-        creatUser(this.editedItem).then(response => {
-          console.log(response)
-          this.users.push(this.editedItem)
-        }).then(() => {
-          this.getData()
-        })
+      if (this.$refs.form.validate()) {
+        if (this.editedIndex > -1) {
+          Object.assign(this.users[this.editedIndex], this.editedItem)
+          updateUser(this.editedItem.id, this.editedItem).then(response => {
+          }).then(() => {
+            this.getData()
+          })
+        } else {
+          creatUser(this.editedItem).then(response => {
+            console.log(response)
+            this.users.push(this.editedItem)
+          }).then(() => {
+            this.getData()
+          })
+        }
+        this.close()
       }
-      this.close()
     },
     newUser () {
       this.cleanData()
     },
     cleanData () {
+      this.$refs.form.reset()
       Object.keys(this.editItem).forEach(key => { this.editItem[key] = null })
     }
   }

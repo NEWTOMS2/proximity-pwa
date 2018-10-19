@@ -12,10 +12,13 @@ NProgress.configure({
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  if (getToken() || getToken() !== undefined) {
+  const token = getToken()
+  if (token !== undefined) {
     store.dispatch('fetchLoggedUser').then(() => {
       next({replace: true})
       NProgress.done()
+    }).catch(() => {
+      console.log('Hallo!')
     })
     if (to.path === '/') {
       next('/app')

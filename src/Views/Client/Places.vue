@@ -13,18 +13,41 @@
                     <v-card-text>
                         <v-container grid-list-md>
                             <v-layout wrap>
-                                <v-form class="full-weight" v-model="valid">
-                                    <v-text-field :loading="isFetchingItem" :disabled="isFetchingItem" v-model="editedPlace.name" label="Place"></v-text-field>
+                                <v-form class="full-weight" ref="form" v-model="valid" lazy-validation>
+                                    <v-text-field
+                                    :rules="nameRule" 
+                                    required 
+                                    :loading="isFetchingItem" 
+                                    :disabled="isFetchingItem" 
+                                    v-model="editedPlace.name" 
+                                    label="Place">
+                                    </v-text-field>
                                     <gmap-autocomplete
+                                        required
                                         ref="autocomplete"
                                         class="v-button-autocomplete form-control"
                                         @place_changed="setPlace"
-                                        types="(cities)"
-                                        >
+                                        types="(cities)">
                                     </gmap-autocomplete>
-                                    <v-text-field v-if="editedIndex !== -1" :loading="isFetchingItem" :disabled="true" v-model="editedPlace.address" label="Current Address"></v-text-field>
-                                    <v-text-field :loading="isFetchingItem" :disabled="true" v-model="editedPlace.lat" label="Latitude"></v-text-field>
-                                    <v-text-field :loading="isFetchingItem" :disabled="true" v-model="editedPlace.lng" label="Longitude"></v-text-field>
+                                    <v-text-field 
+                                    v-if="editedIndex !== -1" 
+                                    :loading="isFetchingItem" 
+                                    :disabled="true" 
+                                    v-model="editedPlace.address" 
+                                    label="Current Address">
+                                    </v-text-field>
+                                    <v-text-field 
+                                    :loading="isFetchingItem" 
+                                    :disabled="true" 
+                                    v-model="editedPlace.lat" 
+                                    label="Latitude">
+                                    </v-text-field>
+                                    <v-text-field 
+                                    :loading="isFetchingItem" 
+                                    :disabled="true" 
+                                    v-model="editedPlace.lng" 
+                                    label="Longitude">
+                                    </v-text-field>
                                 </v-form>
                                 <GmapMap
                                   :center="center"
@@ -45,7 +68,7 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-                        <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+                        <v-btn :disabled="!valid" color="blue darken-1" flat @click.native="save">Save</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -82,6 +105,7 @@ import {
 export default {
   data: () => ({
     search: '',
+    valid: true,
     dialog: false,
     isFetching: false,
     isFetchingItem: false,
@@ -90,6 +114,9 @@ export default {
       { text: 'Name', value: 'name', width: '250px' },
       { text: 'Address', value: 'address' },
       { text: 'Actions', value: 'action', align: 'center', sortable: false, width: '250px' }
+    ],
+    nameRule: [
+      v => !!v || 'the name is required'
     ],
     places: [],
     marker: {},
@@ -208,23 +235,25 @@ export default {
       }, 300)
     },
     save () {
-      this.editedPlace.lat = this.editedPlace.lat.toString()
-      this.editedPlace.lng = this.editedPlace.lng.toString()
-      if (this.editedIndex > -1) {
-        Object.assign(this.places[this.editedIndex], this.editedPlace)
-        updatePlace(this.editedPlace.id, this.editedPlace).then(response => {
-          console.log(response)
-        }).then(() => {
-          this.getData()
-        })
-      } else {
-        creatPlace(this.editedPlace).then(response => {
-          console.log(response)
-        }).then(() => {
-          this.getData()
-        })
+      if (this.$refs.form.validate()) {
+        this.editedPlace.lat = this.editedPlace.lat.toString()
+        this.editedPlace.lng = this.editedPlace.lng.toString()
+        if (this.editedIndex > -1) {
+          Object.assign(this.places[this.editedIndex], this.editedPlace)
+          updatePlace(this.editedPlace.id, this.editedPlace).then(response => {
+            console.log(response)
+          }).then(() => {
+            this.getData()
+          })
+        } else {
+          creatPlace(this.editedPlace).then(response => {
+            console.log(response)
+          }).then(() => {
+            this.getData()
+          })
+        }
+        this.close()
       }
-      this.close()
     },
     deletePlace (item) {
       confirm('Are you sure you want to delete this item?')
