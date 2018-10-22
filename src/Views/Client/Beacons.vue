@@ -1,12 +1,11 @@
 <template>
         <div class="container">
         <v-toolbar flat color="white">
-            <v-toolbar-title class="elegant__title"><img style="width: 25%;" src="@/assets/beacon.png" alt="" srcset=""><h3>Beacons</h3></v-toolbar-title>
+            <v-toolbar-title class="elegant__title"><img style="width: 25%;" src="@/assets/beacon.png" alt="" srcset=""><h3>{{ BeaconTitle }}</h3></v-toolbar-title>
             <v-spacer></v-spacer>
             <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
-            <v-btn slot="activator" color="primary" dark class="mb-2">New Item</v-btn>
+            <v-btn :v-if="role === 'Master'" @click="showModal" color="primary" dark class="mb-2">New Item</v-btn>
             <v-dialog v-model="dialog" max-width="500px">
-              <v-btn slot="activator" color="primary" dark class="mb-2">New Item</v-btn>
                 <v-card>
                     <v-card-title>
                         <span class="headline">{{ formTitle }}</span>
@@ -15,7 +14,7 @@
                         <v-container grid-list-md>
                             <v-layout wrap>
                                 <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="editedItem.name" label="Beacon Name"></v-text-field>
+                                    <v-text-field v-model="editedItem.name" label="Serial"></v-text-field>
                                 </v-flex>
                             </v-layout>
                         </v-container>
@@ -81,8 +80,14 @@ export default {
   }),
 
   computed: {
+    BeaconTitle () {
+      return this.$store.state.user.info.role === 'Master' ? 'Beacon\'s Provisioning' : 'Beacons'
+    },
     formTitle () {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+    },
+    role () {
+      return this.$store.state.user.info.role
     }
   },
 
@@ -137,6 +142,9 @@ export default {
         })
       }
       this.close()
+    },
+    showModal () {
+      this.dialog = true
     }
   }
 }

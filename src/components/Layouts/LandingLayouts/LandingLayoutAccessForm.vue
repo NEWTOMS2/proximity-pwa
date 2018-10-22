@@ -13,7 +13,7 @@
                     {{ error }}
                   </v-alert>
                   <v-layout justify-center>
-                      <v-btn color="primary" :loading="isFetching" @click="onSubmit()">Login</v-btn>
+                      <v-btn color="primary" :disabled="isFetching" :loading="isFetching" @click="onSubmit()">Login</v-btn>
                   </v-layout>
                 </v-form>
         </v-layout>
@@ -45,7 +45,7 @@ export default {
         this.isUserValid = false
         this.$store.dispatch('userLogIn', this.form).then(() => {
           this.$router.push({ path: '/app' })
-          this.isFetching = false
+          this.isFetching = true
         }).catch((error) => {
           this.isFetching = false
           this.isUserValid = true

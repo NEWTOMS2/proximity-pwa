@@ -46,7 +46,7 @@ export default new Router({
       path: '/app/beacons',
       name: 'Beacons',
       component: Main,
-      meta: {title: 'Beacons', model: true, prependIcon: 'adjust', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Client', 'Administrator']},
+      meta: {title: 'Beacons', model: true, prependIcon: 'adjust', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Master', 'Client', 'Administrator']},
       children: [
         { path: '/app/beacons/all', component: Beacons, meta: {title: 'All Beacons', icon: 'scatter_plot'} },
         { path: '/app/beacons/types', component: BeaconTypes, meta: {title: 'Types', icon: 'linear_scale'} },
