@@ -48,11 +48,11 @@ export default new Router({
       component: Main,
       meta: {title: 'Beacons', model: true, prependIcon: 'adjust', appendIcon: 'keyboard_arrow_up', appendIconAlt: 'keyboard_arrow_down', roles: ['Master', 'Client', 'Administrator']},
       children: [
-        { path: '/app/beacons/all', component: Beacons, meta: {title: 'All Beacons', icon: 'scatter_plot'} },
-        { path: '/app/beacons/types', component: BeaconTypes, meta: {title: 'Types', icon: 'linear_scale'} },
-        { path: '/app/beacons/places', component: Places, meta: {title: 'Places', icon: 'place', group: ''} },
-        { path: '/app/beacons/hierarchy', component: BeaconHierarchy, meta: {title: 'Hierarchy', icon: 'border_vertical'} },
-        { path: '/app/beacons/placehierarchy', component: BeaconPlaceHierarchy, meta: {title: 'Place Hierarchy', icon: 'group_work'} }
+        { path: '/app/beacons/all', component: Beacons, meta: {title: 'All Beacons', icon: 'scatter_plot', roles: ['Master', 'Administrator']} },
+        { path: '/app/beacons/types', component: BeaconTypes, meta: {title: 'Types', icon: 'linear_scale', roles: ['Administrator']} },
+        { path: '/app/beacons/places', component: Places, meta: {title: 'Places', icon: 'place', group: '', roles: ['Administrator']} },
+        { path: '/app/beacons/hierarchy', component: BeaconHierarchy, meta: {title: 'Hierarchy', icon: 'border_vertical', roles: ['Administrator']} },
+        { path: '/app/beacons/placehierarchy', component: BeaconPlaceHierarchy, meta: {title: 'Place Hierarchy', icon: 'group_work', roles: ['Administrator']} }
       ]
     },
     {
